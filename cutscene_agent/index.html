@@ -1,51 +1,562 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WIP - Kuaishou GameMind</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background: #f5f5f5;
-            color: #333;
-        }
-        .container {
-            text-align: center;
-            padding: 2rem;
-        }
-        .icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        p {
-            font-size: 1.1rem;
-            color: #666;
-        }
-        a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cutscene Agent — Automated 3D Cutscene Generation</title>
+  <meta name="description" content="Cutscene Agent: An LLM Agent Framework for Automated 3D Cutscene Generation. Generate editable Unreal Engine cutscenes from natural-language scripts." />
+
+  <!-- Fonts -->
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <link rel="stylesheet" href="style.css?v=23" />
 </head>
+
 <body>
-    <div class="container">
-        <div class="icon">🚧</div>
-        <h1>Work in Progress</h1>
-        <p>This page is under construction. Stay tuned!</p>
-        <p><a href="/">← Back to Home</a></p>
+  <!-- ====== Navbar ====== -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="#" class="navbar__logo">
+        <span class="navbar__logo-icon"><i class="fa-solid fa-clapperboard"></i></span>
+        <span class="navbar__logo-text">Cutscene Agent</span>
+      </a>
+      <div class="navbar__links">
+        <a href="#contributions" data-i18n="nav_contrib">Contributions</a>
+        <a href="#pipeline" data-i18n="nav_pipeline">Pipeline</a>
+        <a href="#videos" data-i18n="nav_videos">Demos</a>
+        <a href="#results" data-i18n="nav_results">Results</a>
+      </div>
+      <div class="navbar__actions">
+        <div class="lang-switch" id="langSwitch">
+          <button class="lang-btn active" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="zh">中文</button>
+        </div>
+      </div>
     </div>
+  </nav>
+
+  <!-- ====== HERO ====== -->
+  <header class="hero" id="hero">
+    <div class="hero__particles" id="heroParticles"></div>
+    <div class="hero__content">
+      <div class="hero__badge">
+        <span class="hero__badge-dot"></span>
+        <span data-i18n="hero_badge">Kuaishou GameMind Lab</span>
+      </div>
+      <h1 class="hero__title">
+        <span class="hero__title-line hero__title-line--1">Cutscene</span>
+        <span class="hero__title-line hero__title-line--2">Agent</span>
+      </h1>
+      <p class="hero__subtitle" data-i18n="hero_subtitle">An LLM Agent Framework for Automated 3D Cutscene Generation</p>
+      <p class="hero__desc" data-i18n="hero_desc">Transform natural-language scripts into fully editable Unreal Engine cutscenes — with coordinated character animation, dialogue, and cinematography — in minutes, not weeks.</p>
+      <div class="hero__btns">
+        <a href="https://arxiv.org/abs/2604.25318" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
+          <i class="fa-solid fa-file-lines"></i>
+          <span data-i18n="btn_paper">Paper</span>
+        </a>
+        <a href="https://github.com/Kuaishou-GameMind/cutscene_agent" target="_blank" rel="noopener noreferrer" class="btn btn--glass">
+          <i class="fa-brands fa-github"></i>
+          <span>GitHub</span>
+        </a>
+        <a href="#videos" class="btn btn--ghost">
+          <i class="fa-solid fa-play"></i>
+          <span data-i18n="btn_demos">Video Demos</span>
+        </a>
+      </div>
+    </div>
+    <div class="hero__visual">
+      <div class="hero__img-wrapper">
+        <img src="assets/teaser.png" alt="Cutscene Agent Overview" class="hero__img" />
+        <div class="hero__img-glow"></div>
+      </div>
+    </div>
+    <div class="hero__scroll">
+      <div class="hero__scroll-line"></div>
+      <span data-i18n="scroll_hint">Scroll</span>
+    </div>
+  </header>
+
+  <!-- ====== ABSTRACT ====== -->
+  <section class="abstract" id="abstract">
+    <div class="container">
+      <div class="abstract__inner">
+        <div class="abstract__line"></div>
+        <p class="abstract__text" data-i18n="abstract_text">
+          Cutscenes are indispensable components of modern video games, serving as the primary vehicle for narrative delivery and emotional engagement. However, cutscene production remains one of the most complex workflows in digital content creation. We present <strong>Cutscene Agent</strong>, an LLM agent framework that automates end-to-end cutscene generation — transforming natural-language scripts into industry-grade, editable Unreal Engine Level Sequences with coordinated character animation, cinematography, dialogue, and sound design.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CONTRIBUTIONS ====== -->
+  <section class="contributions" id="contributions">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag" data-i18n="contrib_tag">What We Built</span>
+        <h2 class="section-title" data-i18n="contrib_title">Key Contributions</h2>
+      </div>
+
+      <div class="contrib-grid">
+        <!-- Card 1 -->
+        <div class="contrib-card" data-aos="fade-up">
+          <div class="contrib-card__num">01</div>
+          <div class="contrib-card__visual">
+            <div class="contrib-anim contrib-anim--toolkit">
+              <div class="anim-node anim-node--agent">
+                <div class="anim-node__pulse"></div>
+                <i class="fa-solid fa-robot"></i>
+                <span>LLM Agent</span>
+              </div>
+              <div class="anim-connector">
+                <div class="anim-connector__line"></div>
+                <div class="anim-connector__particles">
+                  <span class="anim-particle"></span>
+                  <span class="anim-particle"></span>
+                  <span class="anim-particle"></span>
+                </div>
+                <div class="anim-connector__label">MCP</div>
+              </div>
+              <div class="anim-node anim-node--engine">
+                <div class="anim-node__pulse"></div>
+                <i class="fa-solid fa-gamepad"></i>
+                <span>UE5</span>
+              </div>
+            </div>
+          </div>
+          <h3 class="contrib-card__title" data-i18n="contrib1_title">Cutscene Toolkit</h3>
+          <p class="contrib-card__desc" data-i18n="contrib1_desc">A comprehensive MCP-based interface library for bidirectional LLM–Engine integration. Agents invoke engine operations and observe real-time scene state — enabling closed-loop generation of editable, engine-native cinematic assets.</p>
+          <div class="contrib-card__tags">
+            <span class="tag" data-i18n="tag_char">Character Mgmt</span>
+            <span class="tag" data-i18n="tag_cam">Camera Templates</span>
+            <span class="tag" data-i18n="tag_query">Asset Query</span>
+            <span class="tag" data-i18n="tag_percep">Scene Perception</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="contrib-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="contrib-card__num">02</div>
+          <div class="contrib-card__visual">
+            <div class="contrib-anim contrib-anim--agents">
+              <div class="agent-tree">
+                <div class="agent-tree__root">
+                  <i class="fa-solid fa-clapperboard"></i>
+                  <span data-i18n="agent_director">Director</span>
+                </div>
+                <div class="agent-tree__branches">
+                  <div class="agent-tree__branch">
+                    <div class="agent-tree__line"></div>
+                    <div class="agent-tree__leaf">
+                      <i class="fa-solid fa-person-walking"></i>
+                      <span data-i18n="agent_anim">Animation</span>
+                    </div>
+                  </div>
+                  <div class="agent-tree__branch">
+                    <div class="agent-tree__line"></div>
+                    <div class="agent-tree__leaf">
+                      <i class="fa-solid fa-video"></i>
+                      <span data-i18n="agent_cinema">Camera</span>
+                    </div>
+                  </div>
+                  <div class="agent-tree__branch">
+                    <div class="agent-tree__line"></div>
+                    <div class="agent-tree__leaf">
+                      <i class="fa-solid fa-volume-high"></i>
+                      <span data-i18n="agent_sound">Sound</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="agent-loop">
+                <svg viewBox="0 0 200 30" class="agent-loop__svg">
+                  <path d="M20,15 C50,-5 150,-5 180,15" fill="none" stroke="url(#loopGrad)" stroke-width="1.5" stroke-dasharray="6 4" class="agent-loop__path"/>
+                  <defs><linearGradient id="loopGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#f97316"/><stop offset="100%" style="stop-color:#ea580c"/></linearGradient></defs>
+                </svg>
+                <span class="agent-loop__label" data-i18n="agent_feedback">Visual Feedback Loop</span>
+              </div>
+            </div>
+          </div>
+          <h3 class="contrib-card__title" data-i18n="contrib2_title">Multi-Agent System</h3>
+          <p class="contrib-card__desc" data-i18n="contrib2_desc">A director agent orchestrates specialist subagents for animation, cinematography, and sound. A closed-loop visual reasoning mechanism enables agents to perceive rendered frames and iteratively refine camera composition and staging.</p>
+          <div class="contrib-card__tags">
+            <span class="tag" data-i18n="tag_delegate">Subagent Delegation</span>
+            <span class="tag" data-i18n="tag_visual">Visual Reasoning</span>
+            <span class="tag" data-i18n="tag_context">Context Mgmt</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="contrib-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="contrib-card__num">03</div>
+          <div class="contrib-card__visual">
+            <div class="contrib-anim contrib-anim--bench">
+              <div class="bench-stack">
+                <div class="bench-layer" data-level="1">
+                  <span class="bench-layer__badge">L1</span>
+                  <span class="bench-layer__text" data-i18n="bench_l1">Tool-Use Correctness</span>
+                </div>
+                <div class="bench-layer" data-level="2">
+                  <span class="bench-layer__badge">L2</span>
+                  <span class="bench-layer__text" data-i18n="bench_l2">Structural Integrity</span>
+                </div>
+                <div class="bench-layer" data-level="3">
+                  <span class="bench-layer__badge">L3</span>
+                  <span class="bench-layer__text" data-i18n="bench_l3">Cinematic Quality</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 class="contrib-card__title" data-i18n="contrib3_title">CutsceneBench</h3>
+          <p class="contrib-card__desc" data-i18n="contrib3_desc">The first benchmark targeting long-horizon, interdependent tool-use evaluation for cinematic generation. Each scenario requires coordinating dozens of dependent tool calls across a three-layer assessment — from tool-call correctness to structural integrity to final cinematic quality.</p>
+          <div class="contrib-card__tags">
+            <span class="tag" data-i18n="tag_longhor">Long-Horizon</span>
+            <span class="tag" data-i18n="tag_interdep">Interdependent Tools</span>
+            <span class="tag" data-i18n="tag_judge">LLM-as-Judge</span>
+            <span class="tag" data-i18n="tag_multi">Multi-Dimensional</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PIPELINE ====== -->
+  <section class="pipeline" id="pipeline">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag" data-i18n="pipeline_tag">System Architecture</span>
+        <h2 class="section-title" data-i18n="pipeline_title">How It Works</h2>
+        <p class="section-sub" data-i18n="pipeline_sub">A director agent interprets natural-language scripts via a prompt & context manager, delegates to specialist subagents (animation, camera, sound), and interacts bidirectionally with Unreal Engine 5 through an MCP-based cutscene toolkit — producing fully editable Level Sequences with a visual feedback loop for iterative refinement.</p>
+      </div>
+      <div class="pipeline__figure-wrap" data-aos="zoom-in">
+        <div id="archDiagram" class="interactive-figure"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== VIDEO DEMOS ====== -->
+  <section class="demos" id="videos">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag" data-i18n="demos_tag">Generated Results</span>
+        <h2 class="section-title" data-i18n="demos_title">Generated Cutscenes</h2>
+        <p class="section-sub" data-i18n="demos_sub_note">The following demo videos are automatically generated using Opus 4.6 + Cutscene Agent. Characters shown are MetaHuman assets; lighting and rendering are done by artists.</p>
+        <div class="demo-type-legend">
+          <div class="demo-type-legend__item">
+            <span class="demo-type-badge demo-type-badge--video"><i class="fa-solid fa-film"></i> <span data-i18n="type_video">Video Replica</span></span>
+            <span class="demo-type-legend__desc" data-i18n="demos_sub_video">Input is a video — audio and character performance are extracted automatically via a video-understanding sub-agent</span>
+          </div>
+          <div class="demo-type-legend__item">
+            <span class="demo-type-badge demo-type-badge--oneliner"><i class="fa-solid fa-comment"></i> <span data-i18n="type_oneliner">One-liner</span></span>
+            <span class="demo-type-legend__desc" data-i18n="demos_sub_oneliner">Input is a single sentence, expanded by the agent into a full cutscene</span>
+          </div>
+          <div class="demo-type-legend__item">
+            <span class="demo-type-badge demo-type-badge--script"><i class="fa-solid fa-scroll"></i> <span data-i18n="type_script">Full Script</span></span>
+            <span class="demo-type-legend__desc" data-i18n="demos_sub_script">Input is a full script — characters, animations, dialogue, and cinematography are all orchestrated by the agent</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case 1 -->
+      <div class="demo-case" data-input-type="video-replica" data-aos="fade-up">
+        <div class="demo-case__header">
+          <h3 class="demo-title" data-i18n="case1_title">Bathhouse Dispute</h3>
+          <span class="demo-type-badge demo-type-badge--video"><i class="fa-solid fa-film"></i> <span data-i18n="type_video">Video Replica</span></span>
+        </div>
+        <div class="demo-case__body">
+          <div class="demo-script demo-script--ref">
+            <div class="demo-script__ref-note">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i>
+              <span data-i18n="ref_note">Re-created from original video</span>
+            </div>
+          </div>
+          <div class="demo-video">
+            <div class="demo-video__thumb" id="thumb1">
+              <img class="demo-video__img" src="assets/demo_mds_1_thumb.jpg" alt="Video thumbnail" />
+              <div class="demo-video__play-overlay">
+                <div class="demo-video__play-btn">
+                  <i class="fa-solid fa-play"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case 2: Bar Encounter (One-liner) -->
+      <div class="demo-case" data-input-type="oneliner" data-aos="fade-up">
+        <div class="demo-case__header">
+          <h3 class="demo-title" data-i18n="case2_title">Bar Encounter</h3>
+          <span class="demo-type-badge demo-type-badge--oneliner"><i class="fa-solid fa-comment"></i> <span data-i18n="type_oneliner">One-liner</span></span>
+        </div>
+        <div class="demo-case__body">
+          <div class="demo-script demo-script--oneliner">
+            <div class="demo-script__header">
+              <i class="fa-solid fa-comment"></i>
+              <span data-i18n="oneliner_label">One-liner Input</span>
+            </div>
+            <div class="demo-script__lines">
+              <p class="demo-script__prompt" data-i18n="case2_prompt">Cooper and Gavin run into each other at a bar on Friday night. They have a lighthearted conversation, catching up on each other's work, warmly asking about each other's families, and finally deciding to grab a drink together to celebrate the weekend.</p>
+            </div>
+          </div>
+          <div class="demo-video">
+            <div class="demo-video__thumb" id="thumb2">
+              <img class="demo-video__img" src="assets/demo_bar_thumb.jpg" alt="Video thumbnail" />
+              <div class="demo-video__play-overlay">
+                <div class="demo-video__play-btn">
+                  <i class="fa-solid fa-play"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case 3: The Godfather Recreation -->
+      <div class="demo-case" data-input-type="full-script" data-aos="fade-up">
+        <div class="demo-case__header">
+          <h3 class="demo-title" data-i18n="case3_title">The Godfather Recreation</h3>
+          <span class="demo-type-badge demo-type-badge--script"><i class="fa-solid fa-scroll"></i> <span data-i18n="type_script">Full Script</span></span>
+        </div>
+        <div class="demo-case__body">
+          <div class="demo-script">
+            <div class="demo-script__header">
+              <i class="fa-solid fa-scroll"></i>
+              <span data-i18n="script_label">Input Script</span>
+            </div>
+            <div class="demo-script__lines">
+              <div class="script-line">
+                <span class="script-char script-char--a">Don Vito</span>
+                <p class="script-text" data-i18n="case3_l1">"Why did you go to the police? Why didn't you come to me first?"</p>
+                <span class="script-dir" data-i18n="case3_d1">[calm, probing, seated in shadow]</span>
+              </div>
+              <div class="script-line">
+                <span class="script-char script-char--b">Bonasera</span>
+                <p class="script-text" data-i18n="case3_l2">"What do you want of me? Tell me anything, but do what I beg you to do."</p>
+                <span class="script-dir" data-i18n="case3_d2">[desperate, leaning forward]</span>
+              </div>
+              <div class="script-line">
+                <span class="script-char script-char--a">Don Vito</span>
+                <p class="script-text" data-i18n="case3_l3">"That I cannot do."</p>
+                <span class="script-dir" data-i18n="case3_d3">[quiet refusal, unmoved]</span>
+              </div>
+              <div class="script-line">
+                <span class="script-char script-char--b">Bonasera</span>
+                <p class="script-text" data-i18n="case3_l4">"I'll give you anything you ask."</p>
+                <span class="script-dir" data-i18n="case3_d4">[offers payment immediately, almost pleading]</span>
+              </div>
+              <div class="script-line script-line--more">
+                <span class="script-more" data-i18n="script_more">+ more lines …</span>
+              </div>
+            </div>
+          </div>
+          <div class="demo-video">
+            <div class="demo-video__thumb" id="thumb3">
+              <img class="demo-video__img" src="assets/demo_gf_1_thumb.jpg" alt="The Godfather recreation thumbnail" />
+              <div class="demo-video__play-overlay">
+                <div class="demo-video__play-btn">
+                  <i class="fa-solid fa-play"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case 4: Let the Bullets Fly Recreation -->
+      <div class="demo-case" data-input-type="video-replica" data-aos="fade-up">
+        <div class="demo-case__header">
+          <h3 class="demo-title" data-i18n="case_lbf_title">Let the Bullets Fly Recreation</h3>
+          <span class="demo-type-badge demo-type-badge--video"><i class="fa-solid fa-film"></i> <span data-i18n="type_video">Video Replica</span></span>
+        </div>
+        <div class="demo-case__body">
+          <div class="demo-script demo-script--ref">
+            <div class="demo-script__ref-note">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i>
+              <span data-i18n="ref_note">Re-created from original video</span>
+            </div>
+          </div>
+          <div class="demo-video">
+            <div class="demo-video__thumb" id="thumb4">
+              <img class="demo-video__img" src="assets/demo_let_bullet_fly_1_thumb.jpg" alt="Let the Bullets Fly recreation thumbnail" />
+              <div class="demo-video__play-overlay">
+                <div class="demo-video__play-btn">
+                  <i class="fa-solid fa-play"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case 5: Camera Control Example -->
+      <div class="demo-case" data-input-type="camera-control" data-aos="fade-up">
+        <div class="demo-case__header">
+          <h3 class="demo-title" data-i18n="case_cam_title">Camera Control Example</h3>
+        </div>
+        <div class="demo-case__body">
+          <div class="demo-script">
+            <div class="demo-script__lines">
+              <p class="demo-script__prompt demo-script__prompt--neutral" data-i18n="case_cam_desc">Artifacts generated by Cutscene Agent can be used as control conditions for video generation models, enabling more precise camera control.</p>
+            </div>
+          </div>
+          <div class="demo-video">
+            <div class="demo-video__thumb demo-video__thumb--wide" id="thumb5">
+              <img class="demo-video__img" src="assets/camera_ctrl_demo_1_thumb.jpg" alt="Camera control demo thumbnail" />
+              <div class="demo-video__play-overlay">
+                <div class="demo-video__play-btn">
+                  <i class="fa-solid fa-play"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====== RESULTS ====== -->
+  <section class="results" id="results">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag" data-i18n="results_tag">Evaluation</span>
+        <h2 class="section-title" data-i18n="results_title">Benchmark Results</h2>
+        <p class="section-sub" data-i18n="results_sub">Several frontier LLMs evaluated across 65 scenarios on CutsceneBench's three-layer hierarchy</p>
+      </div>
+      <!-- Row 1: Eval Framework + Radar Chart -->
+      <div class="results__row-top" data-aos="fade-up">
+        <div class="results__col results__col--defs">
+          <div id="evalFramework" class="interactive-figure"></div>
+        </div>
+        <div class="results__col results__col--radar">
+          <h4 class="results__col-title" data-i18n="result_radar_title">L1 &amp; L2 Metrics</h4>
+          <div id="radarChart" class="interactive-figure"></div>
+        </div>
+      </div>
+      <!-- Row 2: L3 Full-Width Bar Chart -->
+      <div class="results__row-bottom" data-aos="fade-up" data-aos-delay="100">
+        <div class="results__col results__col--l3-full">
+          <h4 class="results__col-title" data-i18n="result_l3_col_title">L3 Total Scores</h4>
+          <p class="results__col-subtitle" data-i18n="result_l3_subtitle">Narrative &amp; Cinematic Quality — LLM-as-Judge on rendered video</p>
+          <div id="l3BarChart" class="interactive-figure"></div>
+        </div>
+      </div>
+      <div class="results__ref" data-aos="fade-up">
+        <a href="https://arxiv.org/abs/2604.25318" target="_blank" rel="noopener noreferrer" class="results__ref-link" data-i18n="results_ref_link">
+          <i class="fa-solid fa-arrow-right"></i> See paper for detailed per-metric breakdowns and analysis
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__cite">
+          <h3 data-i18n="cite_title">Citation</h3>
+          <pre class="footer__bibtex"><code>@article{he2026cutscene,
+  title={Cutscene Agent: An LLM Agent Framework for Automated 3D Cutscene Generation},
+  author={He, Lanshan and Pang, Haozhou and Gan, Qi and Shen, Xin and Zhang, Ziwei and Liu, Yibo and Fang, Gang and Liu, Bo and Sheng, Kai and Zeng, Shengfeng and Li, Chaofan and Hui, Zhen and Zhou, Keer and Zhou, Lan and Dai, Shujun},
+  journal={arXiv preprint arXiv:2604.25318},
+  year={2026}
+}</code></pre>
+        </div>
+        <div class="footer__info">
+          <h3 data-i18n="footer_links_title">Links</h3>
+          <div class="footer__link-list">
+            <a href="https://arxiv.org/abs/2604.25318" target="_blank" rel="noopener noreferrer" data-i18n="footer_paper">Paper</a>
+            <a href="https://github.com/Kuaishou-GameMind/cutscene_agent" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="#videos" data-i18n="footer_demos">Video Demos</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 Kuaishou GameMind Lab</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Video Modal -->
+  <div class="video-modal" id="videoModal">
+    <div class="video-modal__backdrop" id="modalBackdrop"></div>
+    <div class="video-modal__content">
+      <button class="video-modal__close" id="modalClose">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <video class="video-modal__player" id="modalVideo" controls></video>
+    </div>
+  </div>
+
+  <script>
+  // ── Video Modal (inline to guarantee execution) ──
+  (function() {
+    var modal = document.getElementById('videoModal');
+    var video = document.getElementById('modalVideo');
+    var closeBtn = document.getElementById('modalClose');
+    var backdrop = document.getElementById('modalBackdrop');
+
+    function open(src) {
+      // If modal already open with same src, do nothing (avoid audio restart)
+      if (modal.classList.contains('is-open')) return;
+      video.src = src;
+      video.load();
+      modal.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      // Wait a tick so modal becomes visible before play (fixes iOS/Chrome frame render)
+      setTimeout(function() {
+        var p = video.play();
+        if (p && p.catch) p.catch(function(){});
+      }, 50);
+    }
+
+    function close() {
+      if (!modal.classList.contains('is-open')) return;
+      modal.classList.remove('is-open');
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+      document.body.style.overflow = '';
+    }
+
+    var thumb1 = document.getElementById('thumb1');
+    if (thumb1) {
+      thumb1.addEventListener('click', function() { open('assets/demo_mds_1.mp4'); });
+    }
+
+    var thumb2 = document.getElementById('thumb2');
+    if (thumb2) {
+      thumb2.addEventListener('click', function() { open('assets/demo_bar.mp4'); });
+    }
+
+    var thumb3 = document.getElementById('thumb3');
+    if (thumb3) {
+      thumb3.addEventListener('click', function() { open('assets/demo_gf_1.mp4'); });
+    }
+
+    var thumb4 = document.getElementById('thumb4');
+    if (thumb4) {
+      thumb4.addEventListener('click', function() { open('assets/demo_let_bullet_fly_1.mp4'); });
+    }
+
+    var thumb5 = document.getElementById('thumb5');
+    if (thumb5) {
+      thumb5.addEventListener('click', function() { open('assets/camera_ctrl_demo_1.mp4'); });
+    }
+
+    closeBtn.addEventListener('click', close);
+    backdrop.addEventListener('click', close);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+  })();
+  </script>
+
+  <script src="script.js?v=20"></script>
+  <script src="figures.js?v=16"></script>
 </body>
 </html>
