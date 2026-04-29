@@ -13,6 +13,7 @@ const I18N = {
     nav_pipeline: "Pipeline",
     nav_videos: "Demos",
     nav_results: "Results",
+    nav_team: "Contributors",
 
     // Hero
     hero_badge: "Kuaishou GameMind Lab",
@@ -131,6 +132,15 @@ const I18N = {
     result_l3_title: "Layer 3: Narrative & Cinematic Quality (LLM-as-Judge)",
     eval_arrow_up: "Increasing evaluation complexity",
 
+    // Team
+    team_tag: "The People Behind",
+    team_title: "Contributors",
+    team_lead: "Team Leader",
+    team_proj: "Project Leader",
+    team_tech: "Technical Implementation",
+    team_art: "Artists & Designers",
+    team_equal: "Equal Contribution",
+
     // Footer
     cite_title: "Citation",
     footer_links_title: "Links",
@@ -144,6 +154,7 @@ const I18N = {
     nav_pipeline: "系统架构",
     nav_videos: "演示视频",
     nav_results: "评测结果",
+    nav_team: "贡献者",
 
     // Hero
     hero_badge: "快手 GameMind 实验室",
@@ -261,6 +272,15 @@ const I18N = {
     // Results L3
     result_l3_title: "L3 层：叙事与影视质量（LLM评审）",
     eval_arrow_up: "评估复杂度递增",
+
+    // Team
+    team_tag: "幕后团队",
+    team_title: "贡献者",
+    team_lead: "团队负责人",
+    team_proj: "项目负责人",
+    team_tech: "技术实现",
+    team_art: "美术与设计",
+    team_equal: "同等贡献",
 
     // Footer
     cite_title: "引用",
