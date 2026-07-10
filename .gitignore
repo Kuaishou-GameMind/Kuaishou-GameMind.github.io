@@ -1,0 +1,15 @@
+# 工程脚手架（后续随 cutscene_agent 迁移统一提交）
+/.github/
+/scripts/
+/docs/
+/AGENTS.md
+/.htmlvalidate.json
+/.prettierrc.json
+/.prettierignore
+/eslint.config.js
+/stylelint.config.js
+/package.json
+/package-lock.json
+
+# cutscene_agent 迁移产物（未纳入本次提交）
+/projects/cutscene_agent/
