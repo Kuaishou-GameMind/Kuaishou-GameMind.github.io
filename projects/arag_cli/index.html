@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arag CLI — Fast Retrieval for Agent Loops</title>
+    <meta
+      name="description"
+      content="A retrieval CLI tool for AI agents. Build a local knowledge base from documents, search with BM25, semantic or hybrid retrieval, and return structured context your agent can act on."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Arag CLI — Fast Retrieval for Agent Loops" />
+    <meta
+      property="og:description"
+      content="A retrieval CLI tool for AI agents. Build a knowledge base from local documents, retrieve the right chunks, and return structured context your agent can act on."
+    />
+    <meta property="og:url" content="https://kuaishou-gamemind.github.io/projects/arag_cli/" />
+    <meta
+      property="og:image"
+      content="https://kuaishou-gamemind.github.io/projects/arag_cli/images/logo.png"
+    />
+    <link rel="canonical" href="https://kuaishou-gamemind.github.io/projects/arag_cli/" />
+    <link rel="icon" type="image/png" href="images/logo.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/_shared/base.css" />
+    <link rel="stylesheet" href="style.css?v=2" />
+  </head>
+
+  <body>
+    <nav class="tool-nav" id="navbar" aria-label="Primary navigation / 主导航">
+      <div class="tool-nav__inner">
+        <a class="tool-nav__brand" href="/projects/arag_cli/" aria-label="Arag CLI home">
+          <img src="images/logo.png" alt="" width="32" height="32" />
+          <span>arag-cli</span>
+        </a>
+        <div class="tool-nav__links">
+          <a href="#quickstart" data-i18n="nav_start">Quickstart</a>
+          <a href="#workflow" data-i18n="nav_workflow">How it works</a>
+          <a href="#api" data-i18n="nav_integrate">Cloud API</a>
+          <a href="#reference" data-i18n="nav_reference">Commands</a>
+        </div>
+        <div class="tool-nav__actions">
+          <a
+            class="tool-nav__github"
+            href="https://github.com/KuaishouGameMind/arag-cli"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i class="fa-brands fa-github" aria-hidden="true"></i>
+            <span>GitHub</span>
+          </a>
+          <div class="lang-switch" role="group" aria-label="Language / 语言">
+            <button type="button" class="lang-btn active" data-lang="en">EN</button>
+            <button type="button" class="lang-btn" data-lang="zh">中</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <section class="product-hero">
+        <div class="product-hero__grid" aria-hidden="true"></div>
+        <div class="product-hero__inner">
+          <div class="product-hero__eyebrow">
+            <span class="status-light"></span>
+            <span data-i18n="hero_eyebrow">Open-source retrieval CLI tool for AI agents</span>
+          </div>
+          <h1 data-i18n="hero_title">
+            Give your agent a
+            <span>fast way to search</span>
+            a local knowledge base.
+          </h1>
+          <p class="product-hero__lead" data-i18n="hero_lead">
+            Build a knowledge base from local documents. Retrieve with keywords, meaning, or both,
+            and return structured evidence your agent can read and call directly.
+          </p>
+
+          <div class="hero-install">
+            <div class="hero-install__switch" role="tablist" aria-label="Operating system">
+              <button
+                type="button"
+                class="active"
+                role="tab"
+                data-install="unix"
+                aria-selected="true"
+              >
+                macOS / Linux
+              </button>
+              <button type="button" role="tab" data-install="windows" aria-selected="false">
+                Windows
+              </button>
+            </div>
+            <div class="hero-install__command">
+              <span class="command-prompt">$</span>
+              <code data-install-code>
+                curl -sSL
+                https://github.com/KuaishouGameMind/arag-cli/releases/latest/download/install.sh |
+                bash
+              </code>
+              <button type="button" class="icon-copy" data-copy-install aria-label="Copy command">
+                <i class="fa-regular fa-copy" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+          <p class="copy-feedback" data-copy-feedback aria-live="polite"></p>
+
+          <div class="product-hero__actions">
+            <a href="#demo" class="action-link action-link--primary">
+              <span data-i18n="hero_demo">See a real run</span>
+              <i class="fa-solid fa-arrow-down" aria-hidden="true"></i>
+            </a>
+            <a
+              href="https://github.com/KuaishouGameMind/arag-cli/tree/main/docs"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="action-link"
+            >
+              <span data-i18n="hero_docs">Read the docs</span>
+              <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="real-run" id="demo">
+        <div class="wide-container">
+          <div class="real-run__heading">
+            <div>
+              <span class="kicker" data-i18n="demo_kicker">REAL CLI RUN · BM25-ONLY</span>
+              <h2 data-i18n="demo_title">Watch the retrieval loop complete.</h2>
+            </div>
+            <p data-i18n="demo_desc">
+              These outputs come from the released macOS arm64 binary against the repository's own
+              Rust and Python fixtures. No embedding API was configured.
+            </p>
+          </div>
+
+          <div class="operator-shell" data-aos="fade-up">
+            <div class="operator-shell__bar">
+              <div class="window-dots" aria-hidden="true">
+                <i></i>
+                <i></i>
+                <i></i>
+              </div>
+              <span>~/knowledge/game-guides</span>
+              <span class="operator-shell__live">
+                <i></i>
+                LOCAL
+              </span>
+            </div>
+            <div class="operator-shell__body">
+              <div class="operator-steps" role="tablist" aria-label="Retrieval workflow">
+                <button
+                  type="button"
+                  class="active"
+                  role="tab"
+                  data-demo="build"
+                  aria-selected="true"
+                >
+                  <span>01</span>
+                  <strong data-i18n="demo_build">Build index</strong>
+                  <small data-i18n="demo_build_note">2 source files</small>
+                </button>
+                <button type="button" role="tab" data-demo="search" aria-selected="false">
+                  <span>02</span>
+                  <strong data-i18n="demo_search">Search</strong>
+                  <small data-i18n="demo_search_note">2ms reported</small>
+                </button>
+                <button type="button" role="tab" data-demo="read" aria-selected="false">
+                  <span>03</span>
+                  <strong data-i18n="demo_read">Read evidence</strong>
+                  <small data-i18n="demo_read_note">source attached</small>
+                </button>
+                <button type="button" role="tab" data-demo="inspect" aria-selected="false">
+                  <span>04</span>
+                  <strong data-i18n="demo_inspect">Inspect</strong>
+                  <small data-i18n="demo_inspect_note">index state</small>
+                </button>
+              </div>
+
+              <div class="terminal-stage" aria-live="polite">
+                <div class="terminal-panel active" data-demo-panel="build">
+                  <pre><code><span class="term-dim">$</span> arag-cli build-index --input-dir ./docs --no-embedding
+
+<span class="term-warn">⚠ Skipping embeddings (BM25-only mode)</span>
+
+<span class="term-ok">✅ Index build complete</span>
+├─ Chunks:        <b>2</b>
+├─ Sentences:     <b>6</b>
+├─ Mode:          <b>BM25-only (no embeddings)</b>
+├─ Native read:   <b>2 files</b>
+├─ Skipped files: <b>0</b>
+└─ Time:          <b>4.2s</b></code></pre>
+                </div>
+                <div class="terminal-panel" data-demo-panel="search" hidden>
+                  <pre><code><span class="term-dim">$</span> arag-cli keyword-search rust safety performance -k 3 --no-cache
+
+{
+  <span class="term-key">"tool"</span>: <span class="term-string">"keyword_search"</span>,
+  <span class="term-key">"results"</span>: [{
+    <span class="term-key">"chunk_id"</span>: <span class="term-string">"1"</span>,
+    <span class="term-key">"matched_keywords"</span>: [<span class="term-string">"rust"</span>, <span class="term-string">"safety"</span>, <span class="term-string">"performance"</span>],
+    <span class="term-key">"score"</span>: <b>2.6269903156735817</b>,
+    <span class="term-key">"snippet"</span>: <span class="term-string">"[Rust Programming Language] | Rust is a systems
+      programming language focused on safety and performance"</span>
+  }],
+  <span class="term-key">"meta"</span>: {
+    <span class="term-key">"search_time_ms"</span>: <b>2</b>,
+    <span class="term-key">"retrieved_tokens"</span>: <b>40</b>,
+    <span class="term-key">"cache_hit"</span>: <b>false</b>
+  }
+}</code></pre>
+                </div>
+                <div class="terminal-panel" data-demo-panel="read" hidden>
+                  <pre><code><span class="term-dim">$</span> arag-cli read-chunk 1
+
+{
+  <span class="term-key">"tool"</span>: <span class="term-string">"read_chunk"</span>,
+  <span class="term-key">"results"</span>: [{
+    <span class="term-key">"chunk_id"</span>: <span class="term-string">"1"</span>,
+    <span class="term-key">"metadata"</span>: { <span class="term-key">"source"</span>: <span class="term-string">"rust.md"</span> },
+    <span class="term-key">"text"</span>: <span class="term-string">"[Rust Programming Language]\nRust is a systems
+      programming language focused on safety and performance.\nIt provides
+      memory safety without garbage collection."</span>,
+    <span class="term-key">"tokens"</span>: <b>39</b>
+  }],
+  <span class="term-key">"meta"</span>: { <span class="term-key">"read_time_ms"</span>: <b>0</b>, <span class="term-key">"cache_hit"</span>: <b>false</b> }
+}</code></pre>
+                </div>
+                <div class="terminal-panel" data-demo-panel="inspect" hidden>
+                  <pre><code><span class="term-dim">$</span> arag-cli inspect-index
+
+{
+  <span class="term-key">"tool"</span>: <span class="term-string">"inspect_index"</span>,
+  <span class="term-key">"index"</span>: {
+    <span class="term-key">"exists"</span>: <b>true</b>,
+    <span class="term-key">"format"</span>: <span class="term-string">"rust_native"</span>,
+    <span class="term-key">"total_sentences"</span>: <b>6</b>,
+    <span class="term-key">"total_chunks"</span>: <b>2</b>,
+    <span class="term-key">"embedding_dim"</span>: <b>0</b>,
+    <span class="term-key">"sample_chunk_ids"</span>: [<span class="term-string">"0"</span>, <span class="term-string">"1"</span>],
+    <span class="term-key">"has_embeddings"</span>: <b>false</b>
+  }
+}</code></pre>
+                </div>
+              </div>
+            </div>
+            <div class="operator-shell__foot">
+              <span>
+                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                no API key
+              </span>
+              <span>
+                <i class="fa-solid fa-database" aria-hidden="true"></i>
+                local index
+              </span>
+              <span>
+                <i class="fa-solid fa-code" aria-hidden="true"></i>
+                structured JSON
+              </span>
+            </div>
+          </div>
+
+          <div class="run-facts">
+            <div>
+              <span data-i18n="fact_process">END-TO-END PROCESS</span>
+              <strong>~10ms</strong>
+              <small data-i18n="fact_process_note">local process time for search</small>
+            </div>
+            <div>
+              <span data-i18n="fact_search">INTERNAL SEARCH</span>
+              <strong>2ms</strong>
+              <small data-i18n="fact_search_note">reported by Arag CLI</small>
+            </div>
+            <div>
+              <span data-i18n="fact_context">CONTEXT RETURNED</span>
+              <strong>40</strong>
+              <small data-i18n="fact_context_note">retrieved tokens</small>
+            </div>
+            <p data-i18n="fact_disclaimer">
+              Local smoke test on 2 fixture chunks; this verifies the workflow, not production-scale
+              throughput.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="quickstart" id="quickstart">
+        <div class="wide-container">
+          <div class="quickstart__intro">
+            <span class="section-index">01 / QUICKSTART</span>
+            <h2 data-i18n="start_title">
+              Build and search your first knowledge base in three commands.
+            </h2>
+            <p data-i18n="start_desc">
+              Start with exact keyword retrieval and no external services. Add embeddings only when
+              your workflow needs semantic or hybrid search.
+            </p>
+          </div>
+          <ol class="quickstart__steps">
+            <li>
+              <span class="step-number">01</span>
+              <div>
+                <h3 data-i18n="start_install">Install the binary</h3>
+                <p data-i18n="start_install_desc">Use the latest release for your platform.</p>
+                <code>curl .../install.sh | bash</code>
+              </div>
+            </li>
+            <li>
+              <span class="step-number">02</span>
+              <div>
+                <h3 data-i18n="start_index">Build a local knowledge base</h3>
+                <p data-i18n="start_index_desc">Markdown, text and CSV are read natively.</p>
+                <code>arag-cli build-index --input-dir ./docs --no-embedding</code>
+              </div>
+            </li>
+            <li>
+              <span class="step-number">03</span>
+              <div>
+                <h3 data-i18n="start_search">Let the agent search the knowledge base</h3>
+                <p data-i18n="start_search_desc">
+                  Get ranked chunks, snippets and metadata as JSON.
+                </p>
+                <code>arag-cli keyword-search "query" -k 5</code>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="workflow" id="workflow">
+        <div class="wide-container">
+          <div class="workflow__heading">
+            <span class="section-index">02 / WORKFLOW</span>
+            <h2 data-i18n="workflow_title">A retrieval layer, not another chat interface.</h2>
+          </div>
+          <div class="workflow-line" data-aos="fade-up">
+            <article>
+              <span>INDEX</span>
+              <div class="workflow-icon"><i class="fa-regular fa-folder-open"></i></div>
+              <h3 data-i18n="flow_index">Bring the files you already have.</h3>
+              <p data-i18n="flow_index_desc">
+                Read Markdown, text and CSV directly. Convert PDF, Office, HTML, images and audio
+                through MarkItDown.
+              </p>
+            </article>
+            <article>
+              <span>STRUCTURE</span>
+              <div class="workflow-icon"><i class="fa-solid fa-layer-group"></i></div>
+              <h3 data-i18n="flow_structure">Keep meaningful units intact.</h3>
+              <p data-i18n="flow_structure_desc">
+                Heading chains travel with each chunk. Tables and code blocks stay atomic instead of
+                breaking mid-structure.
+              </p>
+            </article>
+            <article>
+              <span>RETRIEVE</span>
+              <div class="workflow-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+              <h3 data-i18n="flow_retrieve">Choose the right retrieval cost.</h3>
+              <p data-i18n="flow_retrieve_desc">
+                Use local BM25 for exact signals, embeddings for meaning, or RRF hybrid fusion for
+                both.
+              </p>
+            </article>
+            <article>
+              <span>ACT</span>
+              <div class="workflow-icon"><i class="fa-solid fa-arrow-turn-down"></i></div>
+              <h3 data-i18n="flow_act">Return an explicit next step.</h3>
+              <p data-i18n="flow_act_desc">
+                Stable chunk IDs, source metadata and JSON output let an agent inspect evidence
+                before it answers.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="retrieval-modes" id="search">
+        <div class="wide-container retrieval-modes__layout">
+          <div class="retrieval-modes__intro">
+            <span class="section-index">03 / RETRIEVAL</span>
+            <h2 data-i18n="modes_title">One tool. Three ways to find context.</h2>
+            <p data-i18n="modes_desc">
+              Start local and deterministic. Upgrade the retrieval path without changing the
+              interface your agent calls.
+            </p>
+          </div>
+          <div class="mode-list">
+            <article>
+              <div class="mode-list__label">
+                <span>01</span>
+                <strong>BM25</strong>
+              </div>
+              <div>
+                <h3 data-i18n="mode_bm25">Fast exact-term retrieval</h3>
+                <p data-i18n="mode_bm25_desc">
+                  Multi-keyword scoring and snippets with no model, network or API key.
+                </p>
+              </div>
+              <code>keyword-search</code>
+              <span class="mode-status mode-status--ready" data-i18n="mode_local">LOCAL</span>
+            </article>
+            <article>
+              <div class="mode-list__label">
+                <span>02</span>
+                <strong>VECTOR</strong>
+              </div>
+              <div>
+                <h3 data-i18n="mode_vector">Semantic retrieval by meaning</h3>
+                <p data-i18n="mode_vector_desc">
+                  Connect an OpenAI-compatible embedding endpoint when exact words are not enough.
+                </p>
+              </div>
+              <code>semantic-search</code>
+              <span class="mode-status" data-i18n="mode_optional">OPTIONAL API</span>
+            </article>
+            <article>
+              <div class="mode-list__label">
+                <span>03</span>
+                <strong>RRF</strong>
+              </div>
+              <div>
+                <h3 data-i18n="mode_hybrid">Hybrid recall with fused ranking</h3>
+                <p data-i18n="mode_hybrid_desc">
+                  Combine lexical and semantic rankings, then apply adaptive personalized scoring.
+                </p>
+              </div>
+              <code>search</code>
+              <span class="mode-status" data-i18n="mode_fused">FUSED</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="baseline">
+        <div class="wide-container baseline__inner">
+          <div>
+            <strong>160ms</strong>
+            <span data-i18n="baseline_search">PROJECT-REPORTED KEYWORD SEARCH</span>
+          </div>
+          <div>
+            <strong>5.1MB</strong>
+            <span data-i18n="baseline_binary">PROJECT-REPORTED BINARY SIZE</span>
+          </div>
+          <div>
+            <strong>110MB</strong>
+            <span data-i18n="baseline_memory">PROJECT-REPORTED MEMORY</span>
+          </div>
+          <p data-i18n="baseline_note">
+            Published project baseline versus the original Python implementation. See the repository
+            for benchmark details.
+          </p>
+        </div>
+      </section>
+
+      <section class="shared-api" id="api">
+        <div class="wide-container">
+          <div class="shared-api__heading">
+            <div>
+              <span class="section-index">04 / HTTP API</span>
+              <h2 data-i18n="api_title">One retrieval service. Every agent can share it.</h2>
+            </div>
+            <p data-i18n="api_desc">
+              Run Arag CLI once in your cloud or private network. Local agents and server agents
+              call the same indexed knowledge through a typed FastAPI service instead of maintaining
+              separate copies on every machine.
+            </p>
+          </div>
+
+          <div class="api-overview" data-aos="fade-up">
+            <div class="api-topology">
+              <div class="api-panel-label">REQUEST PATH · HTTP / JSON</div>
+              <div class="agent-clients">
+                <div class="agent-node">
+                  <i class="fa-solid fa-laptop-code" aria-hidden="true"></i>
+                  <span data-i18n="api_local_agent">Local Agent A</span>
+                  <small>macOS</small>
+                </div>
+                <div class="agent-node">
+                  <i class="fa-solid fa-terminal" aria-hidden="true"></i>
+                  <span data-i18n="api_local_agent_b">Local Agent B</span>
+                  <small>Windows</small>
+                </div>
+                <div class="agent-node">
+                  <i class="fa-solid fa-server" aria-hidden="true"></i>
+                  <span data-i18n="api_server_agent">Server Agent</span>
+                  <small>Linux</small>
+                </div>
+              </div>
+              <div class="topology-link">
+                <span>POST / GET</span>
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+              </div>
+              <div class="api-service-node">
+                <div class="api-service-node__head">
+                  <span>
+                    <i></i>
+                    ARAG API
+                  </span>
+                  <code>:8080</code>
+                </div>
+                <h3 data-i18n="api_service_title">Shared retrieval gateway</h3>
+                <div class="api-service-node__flow">
+                  <span>FastAPI</span>
+                  <i class="fa-solid fa-chevron-right"></i>
+                  <span>async subprocess</span>
+                  <i class="fa-solid fa-chevron-right"></i>
+                  <span>arag-cli</span>
+                </div>
+                <div class="api-contract-line">
+                  <code>code</code>
+                  <code>data</code>
+                  <code>text</code>
+                  <code>request_id</code>
+                </div>
+              </div>
+              <div class="topology-link topology-link--storage">
+                <span data-i18n="api_volume">persistent volume</span>
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+              </div>
+              <div class="index-node">
+                <i class="fa-solid fa-database" aria-hidden="true"></i>
+                <strong data-i18n="api_index_title">Shared index</strong>
+                <span>~/.arag</span>
+                <small data-i18n="api_index_note">one source of truth</small>
+              </div>
+            </div>
+
+            <div class="api-benefits">
+              <article>
+                <span>01 / DATA</span>
+                <h3 data-i18n="api_benefit_share">One mounted data directory</h3>
+                <p data-i18n="api_benefit_share_desc">
+                  Agents query the same index, cache, history, notes and pins through the service.
+                </p>
+              </article>
+              <article>
+                <span>02 / CONTRACT</span>
+                <h3 data-i18n="api_benefit_state">Validated request and response</h3>
+                <p data-i18n="api_benefit_state_desc">
+                  Pydantic models validate input. Every endpoint returns code, data, text, message
+                  and request_id.
+                </p>
+              </article>
+              <article>
+                <span>03 / LOGS</span>
+                <h3 data-i18n="api_benefit_observe">Request-level records</h3>
+                <p data-i18n="api_benefit_observe_desc">
+                  JSONL logs record request IDs, endpoint latency and results. Timeouts and CLI
+                  errors map to 408 and 503.
+                </p>
+              </article>
+            </div>
+          </div>
+
+          <div class="api-tooling">
+            <div class="deploy-console" data-aos="fade-up">
+              <div class="deploy-console__head">
+                <div>
+                  <span class="kicker" data-i18n="api_deploy_kicker">DEPLOY THE SERVICE</span>
+                  <h3 data-i18n="api_deploy_title">Start on :8080</h3>
+                </div>
+                <div class="deploy-tabs" role="tablist" aria-label="Deployment method">
+                  <button
+                    type="button"
+                    class="active"
+                    role="tab"
+                    data-api-deploy="docker"
+                    aria-selected="true"
+                  >
+                    Docker
+                  </button>
+                  <button type="button" role="tab" data-api-deploy="local" aria-selected="false">
+                    FastAPI
+                  </button>
+                </div>
+              </div>
+              <div class="deploy-console__code">
+                <pre><code data-api-command>docker build -f api/Dockerfile -t arag-api .
+docker run --rm -p 8080:8080 \
+  -v /srv/arag:/root/.arag \
+  -e ARAG_INDEX_DIR=/root/.arag/index \
+  arag-api</code></pre>
+                <button type="button" data-copy-api aria-label="Copy deployment command">
+                  <i class="fa-regular fa-copy" aria-hidden="true"></i>
+                </button>
+              </div>
+              <p class="deploy-note" data-i18n="api_deploy_note">
+                Run from the repository root and mount a prebuilt Arag data directory.
+              </p>
+              <p class="deploy-feedback" data-api-feedback aria-live="polite"></p>
+            </div>
+
+            <div class="endpoint-board" data-aos="fade-up">
+              <div class="endpoint-board__head">
+                <span data-i18n="api_endpoints">REST SURFACE</span>
+                <a
+                  href="https://github.com/KuaishouGameMind/arag-cli/blob/main/docs/API.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  API docs
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+              </div>
+              <div class="endpoint-group">
+                <span data-i18n="api_group_retrieve">RETRIEVE</span>
+                <code>
+                  <b>POST</b>
+                  /arag/keyword-search
+                </code>
+                <code>
+                  <b>POST</b>
+                  /arag/semantic-search
+                </code>
+                <code>
+                  <b>POST</b>
+                  /arag/search
+                </code>
+                <code>
+                  <b>POST</b>
+                  /arag/read-chunk
+                </code>
+              </div>
+              <div class="endpoint-group">
+                <span data-i18n="api_group_memory">MEMORY</span>
+                <code>
+                  <b>POST</b>
+                  /arag/note · /arag/pin · /arag/cache
+                </code>
+                <code>
+                  <b>GET</b>
+                  /arag/history · /arag/profile · /arag/pin-candidates
+                </code>
+              </div>
+              <div class="endpoint-group">
+                <span data-i18n="api_group_operate">OPERATE</span>
+                <code>
+                  <b>GET</b>
+                  /health · /arag/health
+                </code>
+                <code>
+                  <b>POST</b>
+                  /arag/lint
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <div class="api-security-note">
+            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+            <p data-i18n="api_security">
+              Deployment boundary: the current service does not add authentication. Run it inside a
+              trusted network or place it behind your own TLS and identity-aware API gateway before
+              exposing it externally.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="agent-contract" id="integrate">
+        <div class="wide-container agent-contract__layout">
+          <div class="agent-contract__copy">
+            <span class="section-index">05 / AGENT INTERFACE</span>
+            <h2 data-i18n="contract_title">Stable interfaces with explicit parameters.</h2>
+            <p data-i18n="contract_desc">
+              Arag CLI defines parameter schemas, structured results and diagnostic states for its
+              retrieval commands. Agents can call them through CLI, Agent Skill or REST API.
+            </p>
+            <ul>
+              <li>
+                <i class="fa-solid fa-check"></i>
+                <span data-i18n="contract_schema">Machine-readable parameter schemas</span>
+              </li>
+              <li>
+                <i class="fa-solid fa-check"></i>
+                <span data-i18n="contract_errors">Structured results and explicit error codes</span>
+              </li>
+              <li>
+                <i class="fa-solid fa-check"></i>
+                <span data-i18n="contract_context">CLI, Agent Skill and REST API references</span>
+              </li>
+            </ul>
+            <div class="interface-links">
+              <a
+                href="https://github.com/KuaishouGameMind/arag-cli/blob/main/skill/SKILL.md"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Agent Skill
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+              <a
+                href="https://github.com/KuaishouGameMind/arag-cli/blob/main/docs/API.md"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                REST API
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+            </div>
+          </div>
+          <div class="schema-window" data-aos="fade-up">
+            <div class="schema-window__bar">
+              <span>schema --tool keyword_search</span>
+              <span>function</span>
+            </div>
+            <pre><code>{
+  <span class="term-key">"tools"</span>: [{
+    <span class="term-key">"function"</span>: {
+      <span class="term-key">"name"</span>: <span class="term-string">"keyword_search"</span>,
+      <span class="term-key">"description"</span>: <span class="term-string">"Search for document
+        chunks using keyword-based exact
+        text matching (case-insensitive)."</span>,
+      <span class="term-key">"parameters"</span>: {
+        <span class="term-key">"required"</span>: [<span class="term-string">"keywords"</span>],
+        <span class="term-key">"type"</span>: <span class="term-string">"object"</span>
+      }
+    },
+    <span class="term-key">"type"</span>: <span class="term-string">"function"</span>
+  }]
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="operations" id="reference">
+        <div class="wide-container">
+          <div class="operations__heading">
+            <span class="section-index">06 / OPERATE</span>
+            <h2 data-i18n="operate_title">Everything around retrieval is already in the box.</h2>
+            <p data-i18n="operate_desc">
+              Keep indexes current, isolate projects, inspect usage and diagnose failures without
+              stitching together another toolchain.
+            </p>
+          </div>
+          <div class="command-table" data-aos="fade-up">
+            <div class="command-table__head">
+              <span data-i18n="table_job">JOB</span>
+              <span data-i18n="table_command">COMMANDS</span>
+              <span data-i18n="table_result">WHAT YOUR AGENT GETS</span>
+            </div>
+            <div>
+              <strong data-i18n="job_index">Index lifecycle</strong>
+              <code>build-index · update · daemon · inspect-index</code>
+              <span data-i18n="job_index_result">
+                Incremental refresh and observable index state
+              </span>
+            </div>
+            <div>
+              <strong data-i18n="job_kb">Knowledge bases</strong>
+              <code>kb create · kb use · kb list · kb delete</code>
+              <span data-i18n="job_kb_result">Isolated context for each project or domain</span>
+            </div>
+            <div>
+              <strong data-i18n="job_memory">Retrieval memory</strong>
+              <code>cache · history · note · pin · profile</code>
+              <span data-i18n="job_memory_result">
+                Reuse, annotations, hot chunks and blind spots
+              </span>
+            </div>
+            <div>
+              <strong data-i18n="job_health">Diagnostics</strong>
+              <code>health · lint · config · schema</code>
+              <span data-i18n="job_health_result">
+                Runtime status, configuration and interface schemas
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <div class="wide-container final-cta__inner">
+          <div>
+            <span data-i18n="cta_kicker">Your documents are ready. Give your agent a way in.</span>
+            <h2 data-i18n="cta_title">Install Arag CLI and search locally first.</h2>
+          </div>
+          <div class="final-cta__actions">
+            <a
+              href="https://github.com/KuaishouGameMind/arag-cli/releases/latest"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span data-i18n="cta_install">Get the latest release</span>
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+            <a
+              href="https://github.com/KuaishouGameMind/arag-cli"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="fa-brands fa-github"></i>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="tool-footer">
+      <div class="wide-container tool-footer__inner">
+        <div class="tool-footer__brand">
+          <img src="images/logo.png" alt="" width="40" height="40" />
+          <div>
+            <strong>arag-cli</strong>
+            <span>MIT License · Kuaishou GameMind</span>
+          </div>
+        </div>
+        <p data-i18n="footer_lineage">
+          Built on the original arag project and the A-RAG hierarchical retrieval paper.
+        </p>
+        <div class="tool-footer__links">
+          <a href="https://arxiv.org/abs/2602.03442" target="_blank" rel="noopener noreferrer">
+            A-RAG
+          </a>
+          <a href="https://crates.io/crates/arag-cli" target="_blank" rel="noopener noreferrer">
+            crates.io
+          </a>
+          <a
+            href="https://github.com/KuaishouGameMind/arag-cli/tree/main/docs"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Docs
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/_shared/ui.js"></script>
+    <script src="script.js?v=2"></script>
+  </body>
+</html>

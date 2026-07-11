@@ -13,3 +13,8 @@
 
 # cutscene_agent 迁移产物（未纳入本次提交）
 /projects/cutscene_agent/
+
+# 本地缓存与无关产物
+.DS_Store
+node_modules/
+.playwright-cli/
