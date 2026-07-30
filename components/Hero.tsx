@@ -157,7 +157,7 @@ export default function Hero({ onExplore }: HeroProps) {
               </motion.button>
 
               <motion.a
-                href="https://github.com/KuaishouGameMind"
+                href="https://github.com/Kuaishou-GameMind"
                 className={`inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-sm font-medium border transition-all duration-200 ${
                   isDark
                     ? 'border-white/12 text-white/70 hover:border-white/25 hover:text-white hover:bg-white/5'
