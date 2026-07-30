@@ -24,6 +24,12 @@ export interface Project {
   github?: string
   status: ProjectStatus
   stat?: { value: string; labelZh: string; labelEn: string }
+  /** 大卡预览图绝对路径，缺省则走 logo + 渐变背景降级版式 */
+  preview?: string
+  /** 预览图填充方式，默认 contain（架构图/示意图不裁切）；截图类可用 cover */
+  previewFit?: 'contain' | 'cover'
+  /** 项目 logo 绝对路径，缺省则用 icon 降级渲染 */
+  logo?: string
 }
 
 export const projects: Project[] = [
@@ -47,9 +53,10 @@ export const projects: Project[] = [
     tagsEn: ['UE5', 'Agent', 'Sequencer', 'Cutscene'],
     icon: Video,
     link: '/projects/cutscene_agent/',
-    github: 'https://github.com/Kuaishou-GameMind/cutscene_agent',
+    github: 'https://github.com/KuaishouGameMind/cutscene_agent',
     status: 'live',
     stat: { value: 'MCP', labelZh: '一句话生成 3D 游戏的可消费剧情', labelEn: 'Generate consumable 3D game cinematics from a single prompt' },
+    preview: '/project-preview.png',
   },
   {
     id: 'trace-bench',
@@ -73,6 +80,8 @@ export const projects: Project[] = [
     link: '/projects/trace_bench/',
     github: 'https://github.com/KuaishouGameMind/TRACE-Bench',
     status: 'live',
+    preview: '/projects/trace_bench/images/framework.png',
+    logo: '/projects/trace_bench/images/logo.png',
   },
   {
     id: 'arag-cli',
@@ -96,6 +105,8 @@ export const projects: Project[] = [
     link: '/projects/arag_cli/',
     github: 'https://github.com/KuaishouGameMind/arag-cli',
     status: 'live',
+    preview: '/projects/arag_cli/images/framework.png',
+    logo: '/projects/arag_cli/images/logo.png',
   },
 ]
 

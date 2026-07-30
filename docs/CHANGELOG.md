@@ -2,6 +2,39 @@
 
 > 所有版本变更记录。每次代码改动后须同步追加条目。格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/)，版本号遵循 SemVer。
 
+## [1.6.0] — 2026-07-30
+
+### 首页开源项目改造为轮播展示
+
+- 重构 `Capabilities` 组件：由"1 张硬编码特色大卡 + 下方网格"改为**统一大卡轮播**，所有 `liveProjects` 以等权大卡逐张展示。数据驱动，新增项目自动入轮播，无需改组件。
+- 新增内联 `Carousel` 子组件（framer-motion 手写，无新增依赖）：自动播放（6s/张）+ 悬停暂停 + 左右箭头 + 指示点点击跳转；`AnimatePresence` + `mode="popLayout"` 实现单卡 x 轴滑入滑出；仅 1 项时不渲染控制条与自动播放。
+- 新增内联 `BigCard` 子组件：复用原特色卡版式（徽章 + 标题 + 副标题描述 + 描述 + 标签 + 查看项目/GitHub）+ 16:9 预览图区，整卡保留 `TiltCard` 3D 倾斜交互。
+- 预览图降级策略：有 `preview` 显示架构/截图；缺省走"logo + 品牌色径向渐变"版式；`logo` 亦缺省时用项目 `icon` 渲染。
+- 删除原 `ProjectCard`（网格专用）与硬编码特色卡块及模块级 `featuredProject`/`gridProjects` 派生。
+
+### 项目数据源扩展
+
+- `components/projects.ts`：`Project` 接口新增可选字段 `preview`（大卡预览图路径）、`previewFit`（填充方式，默认 contain）、`logo`（项目 logo 路径，缺省用 icon 降级）。
+- cutscene_agent 填 `preview: '/project-preview.png'`（沿用根目录预览图）；trace_bench、arag_cli 填 `preview`（从各自 GitHub 仓库 README 获取的架构图 `framework.png`）与 `logo`。
+
+### 静态资源
+
+- 新增 `public/projects/trace_bench/images/framework.png`（TRACE BENCH 框架图，源自 TRACE-Bench 仓库 `asset/cartoon.png`）。
+- 新增 `public/projects/arag_cli/images/framework.png`（Arag CLI 框架图，源自 arag-cli 仓库 `assets/arag-cli-framework.png`）。
+
+## [1.5.0] — 2026-07-29
+
+### 首页开源项目展示扩展
+
+- `Capabilities` 组件此前仅展示 cutscene_agent 一张特色大卡片；新增数据驱动的网格区，展示其余已上线项目（TRACE BENCH、Arag CLI），从 `projects.ts` 的 `liveProjects` 自动派生，新增项目无需改组件。
+- 新增 `ProjectCard` 内联组件：项目 logo（`/projects/<slug>/images/logo.png`）、副标题徽章、标题、描述、标签、查看项目 + GitHub 链接，复用 `TiltCard` 3D 倾斜交互。
+- 特色卡片补充 GitHub 链接入口。
+
+### GitHub 链接修正
+
+- 全站 GitHub 链接由 `https://github.com/Kuaishou-GameMind`（个人用户账号，仅含站点仓库）统一改为 `https://github.com/KuaishouGameMind`（组织主页，含全部项目仓库）。
+- 涉及 `Hero.tsx`（1 处）、`Navbar.tsx`（2 处）、`projects.ts`（cutscene_agent github 字段）。
+
 ## [1.4.2] — 2026-07-29
 
 ### Logo 矢量化
