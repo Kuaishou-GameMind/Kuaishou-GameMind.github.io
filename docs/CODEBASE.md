@@ -36,7 +36,7 @@ team-page/
 │       └── RedirectPage.tsx                      重定向页（meta refresh）
 ├── public/                       静态资源（build 时原样复制到 out/）
 │   ├── logo.svg                 站点 logo 矢量图标（favicon + Navbar + Hero 装饰）
-│   ├── project-preview.png       首页 Cutscene Agent 预览图（Capabilities 轮播大卡引用）
+│   ├── project-preview.png       首页 Cutscene Agent 预览图（Capabilities 组件引用）
 │   ├── _shared/                  三站点共享层（base.css + ui.js）
 │   └── projects/                 项目站点资源（统一在 projects/ 下）
 │       ├── cutscene_agent/       assets + style.css + script.js + figures.js + video-modal.js
@@ -66,13 +66,11 @@ team-page/
   icon: SomeIcon,           // lucide-react 图标组件
   link: '/projects/xxx/',
   status: 'live',           // 'live' | 'coming-soon' | 'concept'
-  preview: '/projects/xxx/images/framework.png',  // 可选：大卡预览图，缺省走 logo+渐变降级版式
-  logo: '/projects/xxx/images/logo.png',          // 可选：项目 logo，缺省用 icon 降级渲染
   // ...其余字段
 }
 ```
 
-辅助函数：`liveProjects`（筛选已上线项目，轮播数据源）、`getProject(slug)`（按 slug 查找）。
+辅助函数：`liveProjects`（筛选已上线项目）、`getProject(slug)`（按 slug 查找）。
 
 ### 2. 站点页通用组件（`components/sites/SitePage.tsx`）
 
@@ -120,12 +118,10 @@ team-page/
 
 ## 新增项目指南
 
-1. **注册项目**：在 `components/projects.ts` 的 `projects` 数组添加一项。填 `preview`（大卡预览图）与 `logo` 可让项目在首页轮播大卡中获得完整版式；两者皆缺则自动降级用项目 `icon` 渲染，无需额外处理。
+1. **注册项目**：在 `components/projects.ts` 的 `projects` 数组添加一项。
 2. **创建路由页**：在 `app/projects/<slug>/page.tsx`，用 `SitePage` 组件。
 3. **放静态资源**：在 `public/projects/<slug>/` 放 CSS/JS/images。
 4. **（可选）旧路径兼容**：如需保留旧 URL，在 `app/(redirects)/<old-slug>/page.tsx` 用 `RedirectPage`。
-
-> 新增项目自动出现在首页 `#projects` 轮播（数据源 `liveProjects`），无需改 `Capabilities.tsx`。
 
 ## 构建与部署
 
