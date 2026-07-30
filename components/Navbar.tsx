@@ -116,7 +116,7 @@ export default function Navbar() {
 
               {/* GitHub — orange background */}
               <a
-                href="https://github.com/Kuaishou-GameMind"
+                href="https://github.com/KuaishouGameMind"
                 className="hidden sm:flex items-center p-2 rounded-lg transition-all duration-200 hover:opacity-85 hover:scale-[0.97]"
                 style={{ background: '#FF6400', color: '#fff', boxShadow: '0 0 16px rgba(255,100,0,0.35)' }}
               >
@@ -157,7 +157,7 @@ export default function Navbar() {
                 ))}
                 <div className={`pt-4 border-t ${borderColor}`}>
                   <a
-                    href="https://github.com/Kuaishou-GameMind"
+                    href="https://github.com/KuaishouGameMind"
                     className={`flex items-center gap-3 px-4 py-3 text-base font-medium ${textSecondary} ${navLinkHover} rounded-xl ${hoverBg} transition-all duration-200`}
                     style={{ fontFamily: 'Inter, sans-serif' }}
                   >

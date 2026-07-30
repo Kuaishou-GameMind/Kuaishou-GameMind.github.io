@@ -20,6 +20,8 @@
 
   function getInitialLanguage() {
     try {
+      var global = localStorage.getItem('gamemind-lang');
+      if (global && _config.i18n[global]) return global;
       var saved = localStorage.getItem(_config.storageKey);
       if (saved && _config.i18n[saved]) return saved;
     } catch (e) {}
@@ -49,6 +51,7 @@
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
 
     try {
+      localStorage.setItem('gamemind-lang', lang);
       localStorage.setItem(_config.storageKey, lang);
     } catch (e) {}
 
