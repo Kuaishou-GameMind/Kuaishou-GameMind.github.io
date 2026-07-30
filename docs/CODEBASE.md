@@ -55,7 +55,7 @@ team-page/
 
 ### 1. 项目注册源（`components/projects.ts`）
 
-所有项目的**单一数据源**。包含 id、slug、名称、描述、标签、图标、链接、日期、状态等字段。`Navbar`、`Capabilities` 等组件从此文件读取项目数据。
+所有项目的**单一数据源**。包含 id、slug、名称、描述、标签、图标、链接、状态等字段。`Navbar`、`Capabilities` 等组件从此文件读取项目数据。
 
 ```ts
 // 新增项目只需在 projects 数组里加一项
@@ -65,7 +65,6 @@ team-page/
   nameZh: '...', nameEn: '...',
   icon: SomeIcon,           // lucide-react 图标组件
   link: '/projects/xxx/',
-  date: 'YYYY-MM-DD',       // 开源/首次提交日期，时间线排序与节点展示
   status: 'live',           // 'live' | 'coming-soon' | 'concept'
   preview: '/projects/xxx/images/framework.png',  // 可选：大卡预览图，缺省走 logo+渐变降级版式
   logo: '/projects/xxx/images/logo.png',          // 可选：项目 logo，缺省用 icon 降级渲染
@@ -73,7 +72,7 @@ team-page/
 }
 ```
 
-辅助函数：`liveProjects`（筛选已上线项目）、`timelineProjects`（已上线项目按日期降序，时间线数据源）、`getProject(slug)`（按 slug 查找）。
+辅助函数：`liveProjects`（筛选已上线项目，轮播数据源）、`getProject(slug)`（按 slug 查找）。
 
 ### 2. 站点页通用组件（`components/sites/SitePage.tsx`）
 
@@ -126,7 +125,7 @@ team-page/
 3. **放静态资源**：在 `public/projects/<slug>/` 放 CSS/JS/images。
 4. **（可选）旧路径兼容**：如需保留旧 URL，在 `app/(redirects)/<old-slug>/page.tsx` 用 `RedirectPage`。
 
-> 新增项目自动出现在首页 `#projects` 时间线（数据源 `timelineProjects`，按 `date` 降序），无需改 `Capabilities.tsx`。
+> 新增项目自动出现在首页 `#projects` 轮播（数据源 `liveProjects`），无需改 `Capabilities.tsx`。
 
 ## 构建与部署
 

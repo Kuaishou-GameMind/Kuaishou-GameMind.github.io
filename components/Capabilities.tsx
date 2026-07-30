@@ -1,13 +1,14 @@
 'use client'
 
 import { useRef, useState, useCallback, useEffect } from 'react'
-import { motion, useSpring, useMotionValue } from 'framer-motion'
-import { ArrowRight, Github } from 'lucide-react'
+import { motion, AnimatePresence, useSpring, useMotionValue } from 'framer-motion'
+import { ArrowRight, Github, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTheme } from './ThemeProvider'
 import { useLang } from './LangProvider'
-import { timelineProjects, type Project } from './projects'
+import { liveProjects, type Project } from './projects'
 
 const ORANGE = '#FF6400'
+const AUTO_PLAY_MS = 6000
 
 // ── Tilt card ──────────────────────────────────────────────────
 function TiltCard({ children, className, style }: {
@@ -62,8 +63,8 @@ function TiltCard({ children, className, style }: {
   )
 }
 
-// ── Compact card (one timeline entry) ──────────────────────────
-function CompactCard({ project, isDark, lang, t }: {
+// ── Big card (one slide) ────────────────────────────────────────
+function BigCard({ project, isDark, lang, t }: {
   project: Project
   isDark: boolean
   lang: 'zh' | 'en'
@@ -74,162 +75,222 @@ function CompactCard({ project, isDark, lang, t }: {
   const textMuted = isDark ? 'text-white/45' : 'text-gray-500'
   const border = isDark ? 'border-white/[0.06]' : 'border-gray-200'
   const tags = lang === 'zh' ? project.tagsZh : project.tagsEn
+  const fit = project.previewFit ?? 'contain'
 
   return (
     <TiltCard
-      className={`relative ${cardBg} border ${border} rounded-2xl`}
+      className={`relative ${cardBg} border ${border} rounded-3xl`}
       style={{
         boxShadow: isDark
-          ? '0 0 0 1px rgba(255,100,0,0.10), 0 0 40px rgba(255,100,0,0.05)'
-          : '0 2px 16px rgba(0,0,0,0.06)',
+          ? '0 0 0 1px rgba(255,100,0,0.12), 0 0 60px rgba(255,100,0,0.06)'
+          : '0 2px 24px rgba(0,0,0,0.07)',
       }}
     >
-      <a href={project.link} className="relative z-10 flex items-center gap-5 sm:gap-6 p-5 sm:p-6">
-        {/* 左侧 80px 方块图标区 */}
-        <div
-          className={`shrink-0 w-20 h-20 rounded-xl overflow-hidden border ${border} flex items-center justify-center`}
-          style={{ background: isDark ? '#000' : '#f4f4f4' }}
+      {/* Open-source badge */}
+      <div className="absolute top-6 right-10 z-20">
+        <span
+          className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold text-white"
+          style={{ background: '#22c55e' }}
         >
-          {project.logo ? (
-            <img
-              src={project.logo}
-              alt={project.nameEn}
-              className="w-full h-full object-contain p-2"
-            />
-          ) : project.preview ? (
-            <img
-              src={project.preview}
-              alt={project.nameEn}
-              className="w-full h-full object-contain p-2"
-            />
-          ) : (
-            <project.icon className="w-9 h-9" style={{ color: ORANGE }} />
+          <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+          {t('已开源', 'Open Source')}
+        </span>
+      </div>
+
+      <div className="relative z-10 px-8 sm:px-12 pt-10 pb-8">
+        <div className="flex items-center gap-2 mb-5 flex-wrap">
+          <span
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold text-white"
+            style={{ background: ORANGE }}
+          >
+            <project.icon className="w-5 h-5" />
+            {project.subtitle}
+          </span>
+          {tags.map(tag => (
+            <span
+              key={tag}
+              className={`px-2.5 py-1 text-[11px] rounded-full font-medium ${isDark ? 'bg-white/[0.06] text-white/40' : 'bg-gray-100 text-gray-500'}`}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+        <h3
+          className={`text-2xl sm:text-4xl font-black mb-4 ${textPrimary} leading-snug`}
+          style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '-0.03em' }}
+        >
+          {lang === 'zh' ? project.titleZh : project.titleEn}
+        </h3>
+        <p
+          className="text-base sm:text-lg font-semibold mb-3 leading-snug max-w-2xl"
+          style={{ color: ORANGE, fontFamily: 'Inter, sans-serif' }}
+        >
+          {lang === 'zh' ? project.subtitleDescZh : project.subtitleDescEn}
+        </p>
+        <p className={`text-sm sm:text-[15px] ${textMuted} leading-relaxed max-w-2xl mb-8`}>
+          {lang === 'zh' ? project.descZh : project.descEn}
+        </p>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+          <a
+            href={project.link}
+            className="group inline-flex items-center gap-2 text-sm font-semibold transition-all duration-200 hover:opacity-80"
+            style={{ color: ORANGE, fontFamily: 'Inter, sans-serif' }}
+          >
+            {t('查看项目', 'View Project')}
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          </a>
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`group inline-flex items-center gap-2 text-sm font-medium transition-all duration-200 hover:opacity-80 ${textMuted}`}
+              style={{ fontFamily: 'Inter, sans-serif' }}
+            >
+              <Github className="w-3.5 h-3.5" />
+              GitHub
+            </a>
           )}
         </div>
+      </div>
 
-        {/* 右侧文本区 */}
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 mb-1.5">
-            <span
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold text-white"
-              style={{ background: ORANGE }}
-            >
-              {project.subtitle}
-            </span>
-          </div>
-          <h3
-            className={`text-lg sm:text-xl font-bold ${textPrimary} leading-snug mb-1 truncate`}
-            style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '-0.02em' }}
+      {/* Visual preview area */}
+      <div
+        className={`mx-6 sm:mx-10 mb-6 rounded-2xl overflow-hidden border ${border} aspect-[16/9]`}
+        style={{ position: 'relative', background: isDark ? '#000' : '#f4f4f4' }}
+      >
+        {project.preview ? (
+          <img
+            src={project.preview}
+            alt={project.nameEn}
+            className="w-full h-full"
+            style={{ objectFit: fit, display: 'block' }}
+          />
+        ) : (
+          // 降级版式：logo + 品牌色径向渐变
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{
+              background: `radial-gradient(ellipse 70% 60% at 50% 50%, rgba(255,100,0,${isDark ? '0.18' : '0.12'}) 0%, transparent 70%)`,
+            }}
           >
-            {lang === 'zh' ? project.titleZh : project.titleEn}
-          </h3>
-          <p className={`text-xs sm:text-[13px] ${textMuted} leading-snug mb-2.5 line-clamp-2`}>
-            {lang === 'zh' ? project.subtitleDescZh : project.subtitleDescEn}
-          </p>
-          <div className="flex items-center gap-1.5 flex-wrap">
-            {tags.slice(0, 3).map(tag => (
-              <span
-                key={tag}
-                className={`px-2 py-0.5 text-[10px] rounded-full font-medium ${isDark ? 'bg-white/[0.06] text-white/45' : 'bg-gray-100 text-gray-500'}`}
-              >
-                {tag}
-              </span>
-            ))}
+            {project.logo ? (
+              <img
+                src={project.logo}
+                alt={project.nameEn}
+                className="w-28 h-28 object-contain opacity-80"
+              />
+            ) : (
+              <project.icon className="w-24 h-24 opacity-70" style={{ color: ORANGE }} />
+            )}
           </div>
-        </div>
-
-        {/* 右侧箭头 */}
-        <ArrowRight
-          className="shrink-0 w-4 h-4 hidden sm:block"
-          style={{ color: ORANGE }}
-        />
-      </a>
+        )}
+      </div>
     </TiltCard>
   )
 }
 
-// ── Timeline ───────────────────────────────────────────────────
-function Timeline({ projects, isDark, lang, t }: {
+// ── Carousel ───────────────────────────────────────────────────
+function Carousel({ projects, isDark, lang, t }: {
   projects: Project[]
   isDark: boolean
   lang: 'zh' | 'en'
   t: (zh: string, en: string) => string
 }) {
-  const lineColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
+  const count = projects.length
+  // [direction, index]：direction 决定滑入方向
+  const [[dir, idx], setState] = useState<[number, number]>([1, 0])
+  const [paused, setPaused] = useState(false)
+
+  const go = useCallback((next: number, direction: number) => {
+    setState([direction, ((next % count) + count) % count])
+  }, [count])
+
+  const prev = useCallback(() => go(idx - 1, -1), [go, idx])
+  const next = useCallback(() => go(idx + 1, 1), [go, idx])
+
+  // 自动播放：paused 或仅 1 项时不启动
+  useEffect(() => {
+    if (paused || count <= 1) return
+    const id = setInterval(() => setState(s => [1, (s[1] + 1) % count]), AUTO_PLAY_MS)
+    return () => clearInterval(id)
+  }, [paused, count])
+
+  const showControls = count > 1
 
   return (
-    <div className="relative">
-      {/* 竖直时间轴主线 */}
-      <div
-        className="absolute left-4 sm:left-6 top-3 bottom-3 w-px"
-        style={{ background: lineColor }}
-      />
+    <div
+      className="relative"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {/* Slides viewport */}
+      <div className="relative">
+        <AnimatePresence custom={dir} mode="popLayout" initial={false}>
+          <motion.div
+            key={idx}
+            custom={dir}
+            initial={{ opacity: 0, x: dir > 0 ? 60 : -60 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: dir > 0 ? -60 : 60 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <BigCard project={projects[idx]} isDark={isDark} lang={lang} t={t} />
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
-      <div className="space-y-5">
-        {projects.map((project, i) => {
-          const [y, m] = project.date.split('-')
-          const dateLabel = lang === 'zh'
-            ? `${y}年${Number(m)}月`
-            : new Intl.DateTimeFormat('en', { month: 'short', year: 'numeric' }).format(new Date(project.date))
+      {/* Controls */}
+      {showControls && (
+        <div className="flex items-center justify-center gap-6 mt-8">
+          {/* Prev arrow */}
+          <button
+            onClick={prev}
+            aria-label={t('上一个项目', 'Previous project')}
+            className={`flex items-center justify-center w-11 h-11 rounded-full border transition-all duration-200 hover:scale-105 ${
+              isDark
+                ? 'border-white/10 text-white/70 hover:text-white hover:border-white/20'
+                : 'border-gray-300 text-gray-500 hover:text-gray-900 hover:border-gray-400'
+            }`}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
 
-          return (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="relative pl-12 sm:pl-16"
-            >
-              {/* 时间节点圆点 */}
-              <div
-                className="absolute left-0 top-7 flex items-center justify-center w-8 sm:w-10"
-                aria-hidden
+          {/* Dots */}
+          <div className="flex items-center gap-2">
+            {projects.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => go(i, i > idx ? 1 : -1)}
+                aria-label={t('第 {n} 个项目', 'Go to project {n}').replace('{n}', String(i + 1))}
+                className="group p-1"
               >
                 <span
-                  className="w-3 h-3 rounded-full ring-4 transition-transform duration-300 hover:scale-125"
-                  style={{ background: ORANGE, boxShadow: `0 0 0 1px ${ORANGE}, 0 0 12px ${ORANGE}55`, ['--tw-ring-color' as string]: isDark ? '#050505' : '#f8f8f8' }}
+                  className="block rounded-full transition-all duration-300"
+                  style={{
+                    width: i === idx ? 28 : 8,
+                    height: 8,
+                    background: i === idx ? ORANGE : (isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)'),
+                  }}
                 />
-              </div>
+              </button>
+            ))}
+          </div>
 
-              {/* 日期 + GitHub 行 */}
-              <div className="mb-2 flex items-center gap-3">
-                <span
-                  className="text-sm font-bold tracking-wide"
-                  style={{ color: ORANGE, fontFamily: 'Inter, sans-serif' }}
-                >
-                  {dateLabel}
-                </span>
-                {i === 0 && (
-                  <span
-                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold text-white"
-                    style={{ background: '#22c55e' }}
-                  >
-                    <span className="w-1 h-1 rounded-full bg-white animate-pulse" />
-                    {t('最新', 'Latest')}
-                  </span>
-                )}
-                {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={e => e.stopPropagation()}
-                    className={`ml-auto inline-flex items-center gap-1 text-xs font-medium transition-opacity hover:opacity-70 ${isDark ? 'text-white/40' : 'text-gray-400'}`}
-                    style={{ fontFamily: 'Inter, sans-serif' }}
-                  >
-                    <Github className="w-3.5 h-3.5" />
-                    GitHub
-                  </a>
-                )}
-              </div>
-
-              {/* 项目紧凑卡 */}
-              <CompactCard project={project} isDark={isDark} lang={lang} t={t} />
-            </motion.div>
-          )
-        })}
-      </div>
+          {/* Next arrow */}
+          <button
+            onClick={next}
+            aria-label={t('下一个项目', 'Next project')}
+            className={`flex items-center justify-center w-11 h-11 rounded-full border transition-all duration-200 hover:scale-105 ${
+              isDark
+                ? 'border-white/10 text-white/70 hover:text-white hover:border-white/20'
+                : 'border-gray-300 text-gray-500 hover:text-gray-900 hover:border-gray-400'
+            }`}
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      )}
     </div>
   )
 }
@@ -298,7 +359,7 @@ export default function Capabilities() {
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.8 }}
         >
-          <Timeline projects={timelineProjects} isDark={isDark} lang={lang} t={t} />
+          <Carousel projects={liveProjects} isDark={isDark} lang={lang} t={t} />
         </motion.div>
       </div>
     </section>
