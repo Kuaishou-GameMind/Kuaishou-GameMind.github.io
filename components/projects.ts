@@ -23,6 +23,8 @@ export interface Project {
   link: string
   github?: string
   status: ProjectStatus
+  /** 开源/首次提交日期 YYYY-MM-DD，用于时间线排序与节点展示 */
+  date: string
   stat?: { value: string; labelZh: string; labelEn: string }
   /** 大卡预览图绝对路径，缺省则走 logo + 渐变背景降级版式 */
   preview?: string
@@ -55,6 +57,7 @@ export const projects: Project[] = [
     link: '/projects/cutscene_agent/',
     github: 'https://github.com/KuaishouGameMind/cutscene_agent',
     status: 'live',
+    date: '2026-04-29',
     stat: { value: 'MCP', labelZh: '一句话生成 3D 游戏的可消费剧情', labelEn: 'Generate consumable 3D game cinematics from a single prompt' },
     preview: '/project-preview.png',
   },
@@ -80,6 +83,7 @@ export const projects: Project[] = [
     link: '/projects/trace_bench/',
     github: 'https://github.com/KuaishouGameMind/TRACE-Bench',
     status: 'live',
+    date: '2026-06-17',
     preview: '/projects/trace_bench/images/framework.png',
     logo: '/projects/trace_bench/images/logo.png',
   },
@@ -105,12 +109,18 @@ export const projects: Project[] = [
     link: '/projects/arag_cli/',
     github: 'https://github.com/KuaishouGameMind/arag-cli',
     status: 'live',
+    date: '2026-07-02',
     preview: '/projects/arag_cli/images/framework.png',
     logo: '/projects/arag_cli/images/logo.png',
   },
 ]
 
 export const liveProjects = projects.filter(p => p.status === 'live')
+
+/** 已上线项目按日期降序（最新在前），时间线数据源 */
+export const timelineProjects = [...liveProjects].sort(
+  (a, b) => b.date.localeCompare(a.date)
+)
 
 export function getProject(slug: string): Project | undefined {
   return projects.find(p => p.slug === slug)

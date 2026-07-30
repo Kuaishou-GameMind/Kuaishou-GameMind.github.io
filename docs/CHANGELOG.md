@@ -2,11 +2,27 @@
 
 > 所有版本变更记录。每次代码改动后须同步追加条目。格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/)，版本号遵循 SemVer。
 
+## [1.7.0] — 2026-07-30
+
+### 首页开源项目改为时间线展示
+
+- 重构 `Capabilities` 组件：由**轮播大卡**改为**纵向时间轴**，所有已上线项目沿时间轴按发布日期降序排列，可滚动一览全部项目，不再被轮播逐张遮挡。
+- 新增内联 `Timeline` 子组件：左侧竖直时间轴主线 + 橙色发光节点圆点，每节点挂日期标签与项目卡；最新一项附加「最新/Latest」绿色脉冲徽章；卡片逐项 `whileInView` 上滑淡入。
+- 新增内联 `CompactCard` 子组件：**横向紧凑布局**——左侧 80px 圆角方块（项目 logo / 预览图降级 / icon 三级降级）+ 右侧副标题徽章 + 标题 + 一句话描述 + 标签 + 右侧箭头；整卡点击跳项目页。保留 `TiltCard` 3D 倾斜。
+- 日期 + GitHub 入口置于卡片上方一行（GitHub 链接 `stopPropagation` 不触发整卡跳转）。
+- 删除内联 `BigCard` 与 `Carousel` 子组件（自动播放/箭头/指示点）及相关依赖（`AnimatePresence`、`ChevronLeft/Right`、`AUTO_PLAY_MS`），消除原 16:9 大图区占高的冗余。
+
+### 项目数据源扩展
+
+- `components/projects.ts`：`Project` 接口新增必填字段 `date`（`YYYY-MM-DD`，开源/首次提交日期，用于时间线排序与节点展示）。
+- 三个项目填入从各自 GitHub 仓库最早 commit 提取的日期：cutscene_agent `2026-04-29`、trace_bench `2026-06-17`、arag_cli `2026-07-02`。
+- 新增导出 `timelineProjects`：`liveProjects` 按 `date` 降序拷贝，时间线数据源。
+
 ## [1.6.0] — 2026-07-30
 
 ### 首页开源项目改造为轮播展示
 
-- 重构 `Capabilities` 组件：由"1 张硬编码特色大卡 + 下方网格"改为**统一大卡轮播**，所有 `liveProjects` 以等权大卡逐张展示。数据驱动，新增项目自动入轮播，无需改组件。
+- 重构 `Capabilities` 组件：由"1 张硬编码特色大卡 + 下方网格"改为**统一大卡轮播**，所有 `liveProjects` 以等权大卡逐张展示。数据驱动，新增项目自动入轮播，无需改组件。>（1.7.0 已改为时间线展示）
 - 新增内联 `Carousel` 子组件（framer-motion 手写，无新增依赖）：自动播放（6s/张）+ 悬停暂停 + 左右箭头 + 指示点点击跳转；`AnimatePresence` + `mode="popLayout"` 实现单卡 x 轴滑入滑出；仅 1 项时不渲染控制条与自动播放。
 - 新增内联 `BigCard` 子组件：复用原特色卡版式（徽章 + 标题 + 副标题描述 + 描述 + 标签 + 查看项目/GitHub）+ 16:9 预览图区，整卡保留 `TiltCard` 3D 倾斜交互。
 - 预览图降级策略：有 `preview` 显示架构/截图；缺省走"logo + 品牌色径向渐变"版式；`logo` 亦缺省时用项目 `icon` 渲染。
