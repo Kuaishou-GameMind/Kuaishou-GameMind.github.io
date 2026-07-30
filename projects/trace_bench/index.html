@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TRACE BENCH: Task-driven Roleplay Agentic Checklist Evaluation</title>
+    <meta
+      name="description"
+      content="TRACE BENCH evaluates roleplay models with fixed role-derived checklists, adaptive User Agent dialogue, evidence-grounded state tracking, and auditable scoring."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="TRACE BENCH: Task-driven Roleplay Agentic Checklist Evaluation"
+    />
+    <meta
+      property="og:description"
+      content="Fixed checklist requirements, adaptive roleplay dialogue, private evidence tracking, and a 26-model leaderboard."
+    />
+    <meta property="og:url" content="https://gamemind.kuaishou.com/trace-bench" />
+    <link rel="canonical" href="https://gamemind.kuaishou.com/trace-bench" />
+    <link rel="icon" type="image/png" href="images/logo.png" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+SC:wght@400;500;700&amp;family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/_shared/base.css" />
+    <link rel="stylesheet" href="style.css?v=7" />
+  </head>
+
+  <body>
+    <nav class="navbar" id="navbar" aria-label="Primary navigation / 主导航">
+      <div class="navbar__inner">
+        <a href="/projects/trace_bench/" class="navbar__logo" aria-label="TRACE BENCH home">
+          <img class="navbar__logo-img" src="images/logo.png" alt="" width="32" height="32" />
+          <span class="navbar__logo-text">TRACE BENCH</span>
+        </a>
+        <div class="navbar__links">
+          <a href="#evidence" data-i18n="nav_evidence">Evidence</a>
+          <a href="#framework" data-i18n="nav_framework">Framework</a>
+          <a href="#results" data-i18n="nav_results">Leaderboard</a>
+          <a href="#data" data-i18n="nav_data">Dataset</a>
+        </div>
+        <div class="navbar__actions">
+          <div class="lang-switch" id="langSwitch" role="group" aria-label="Language / 语言">
+            <button type="button" class="lang-btn active" data-lang="en">EN</button>
+            <button type="button" class="lang-btn" data-lang="zh">中文</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <header class="hero" id="hero">
+      <div class="hero__particles" aria-hidden="true"></div>
+      <div class="hero__content">
+        <div class="hero__eyebrow">
+          <span class="hero__badge-dot"></span>
+          <span data-i18n="hero_badge">Kuaishou GameMind Lab</span>
+          <span class="hero__eyebrow-rule"></span>
+          <span>2026</span>
+        </div>
+        <h1 class="hero__title">
+          <span class="hero__title-line hero__title-line--1">TRACE</span>
+          <span class="hero__title-line hero__title-line--2">BENCH</span>
+        </h1>
+        <p class="hero__subtitle" data-i18n="hero_subtitle">
+          Task-driven Roleplay Agentic Checklist Evaluation
+        </p>
+        <p class="hero__desc" data-i18n="hero_desc">
+          Roleplay evaluation should reveal what was tested, what failed, and which dialogue
+          evidence supports the judgment. TRACE BENCH turns each role profile into a fixed
+          checklist, then adaptively verifies it through natural multi-turn interaction.
+        </p>
+        <div class="hero__btns">
+          <a
+            href="paper/main.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn--primary"
+          >
+            <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+            <span data-i18n="btn_paper">Read Paper</span>
+          </a>
+          <a
+            href="https://github.com/KuaishouGameMind/TRACE-Bench"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn--glass"
+          >
+            <i class="fa-brands fa-github" aria-hidden="true"></i>
+            <span>GitHub</span>
+          </a>
+          <a href="#framework" class="btn btn--ghost">
+            <i class="fa-solid fa-arrow-down" aria-hidden="true"></i>
+            <span data-i18n="btn_framework">Explore Method</span>
+          </a>
+        </div>
+        <div class="hero__stats">
+          <div class="hero__stat">
+            <span class="hero__stat-num" data-count="200">200</span>
+            <span class="hero__stat-label" data-i18n="stat_cases">Evaluation Cases</span>
+          </div>
+          <div class="hero__stat">
+            <span class="hero__stat-num" data-count="5498">5,498</span>
+            <span class="hero__stat-label" data-i18n="stat_items">Checklist Items</span>
+          </div>
+          <div class="hero__stat">
+            <span class="hero__stat-num" data-count="26">26</span>
+            <span class="hero__stat-label" data-i18n="stat_models">Evaluated Models</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero__visual">
+        <div class="hero__img-wrapper">
+          <div id="heroFigure" class="interactive-figure"></div>
+        </div>
+      </div>
+      <div class="hero__scroll" aria-hidden="true">
+        <div class="hero__scroll-line"></div>
+        <span data-i18n="scroll_hint">Trace the evidence</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="evidence" id="evidence">
+        <div class="container">
+          <div class="section-header section-header--left">
+            <span class="section-tag" data-i18n="evidence_tag">Validity at a Glance</span>
+            <h2 class="section-title" data-i18n="evidence_title">
+              Coverage is engineered, not assumed.
+            </h2>
+            <p class="section-sub" data-i18n="evidence_sub">
+              TRACE BENCH actively reaches fixed role requirements and preserves the evidence needed
+              to audit every judgment.
+            </p>
+          </div>
+          <div class="evidence-grid">
+            <article class="evidence-card evidence-card--hero" data-aos="fade-up">
+              <div class="coverage-compare">
+                <div class="coverage-row">
+                  <div class="coverage-row__meta">
+                    <span data-i18n="coverage_free">MiniMax free dialogue</span>
+                    <strong>73.74%</strong>
+                  </div>
+                  <div class="coverage-track"><span style="width: 73.74%"></span></div>
+                  <small data-i18n="coverage_free_note">102 messages, 292 items uncovered</small>
+                </div>
+                <div class="coverage-row coverage-row--trace">
+                  <div class="coverage-row__meta">
+                    <span>TRACE BENCH</span>
+                    <strong>99.91%</strong>
+                  </div>
+                  <div class="coverage-track"><span style="width: 99.91%"></span></div>
+                  <small data-i18n="coverage_trace_note">
+                    At most 65 messages, 1 item uncovered
+                  </small>
+                </div>
+              </div>
+              <p class="evidence-card__note" data-i18n="coverage_note">
+                Coverage = (completed + failed) / total. It measures whether an item was tested, not
+                whether the model passed it.
+              </p>
+            </article>
+            <article class="evidence-card" data-aos="fade-up">
+              <span class="evidence-card__label" data-i18n="audit_label">Human audit</span>
+              <strong class="evidence-card__value">93.00%</strong>
+              <p data-i18n="audit_desc">Agreement with human majority over 600 checklist items.</p>
+              <span class="evidence-card__detail">Fleiss' kappa = 0.7255</span>
+            </article>
+            <article class="evidence-card" data-aos="fade-up">
+              <span class="evidence-card__label" data-i18n="hygiene_label">Protocol hygiene</span>
+              <strong class="evidence-card__value">44.7%</strong>
+              <p data-i18n="hygiene_desc">
+                Seeded case-runs contaminated by a fixed first message.
+              </p>
+              <span class="evidence-card__detail" data-i18n="hygiene_detail">
+                Removed in the final protocol
+              </span>
+            </article>
+            <article class="evidence-card" data-aos="fade-up">
+              <span class="evidence-card__label" data-i18n="evolution_label">
+                Closed-loop evolution
+              </span>
+              <strong class="evidence-card__value">-8.48</strong>
+              <p data-i18n="evolution_desc">Mean CC change under refined verification flows.</p>
+              <span class="evidence-card__detail" data-i18n="evolution_detail">
+                Same requirements and denominator
+              </span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="framework" id="framework">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-tag" data-i18n="framework_tag">Traceable Evaluation</span>
+            <h2 class="section-title" data-i18n="framework_title">
+              Fixed targets. Adaptive dialogue. Auditable scores.
+            </h2>
+            <p class="section-sub" data-i18n="framework_sub">
+              Scored requirements are built once from the role profile. The User Agent changes only
+              how those requirements are elicited and verified.
+            </p>
+          </div>
+
+          <div class="method-board" data-aos="fade-up">
+            <article class="method-stage method-stage--checklist">
+              <div class="method-stage__head">
+                <span class="method-stage__num">01</span>
+                <div>
+                  <span class="method-stage__kicker" data-i18n="method_offline">
+                    Offline construction
+                  </span>
+                  <h3 data-i18n="method_checklist">Fixed role-specific checklist</h3>
+                </div>
+              </div>
+              <div class="profile-card">
+                <i class="fa-solid fa-id-card" aria-hidden="true"></i>
+                <span data-i18n="method_profile">Role + scenario specification</span>
+              </div>
+              <div class="method-arrow" aria-hidden="true"><span></span></div>
+              <ol class="mini-checklist">
+                <li>
+                  <span>C1</span>
+                  <span data-i18n="check_identity">Stay in role</span>
+                </li>
+                <li>
+                  <span>C2</span>
+                  <span data-i18n="check_relation">Remember relationship</span>
+                </li>
+                <li>
+                  <span>C3</span>
+                  <span data-i18n="check_world">Maintain world knowledge</span>
+                </li>
+                <li>
+                  <span>C4</span>
+                  <span data-i18n="check_goal">Follow interaction goal</span>
+                </li>
+                <li>
+                  <span>C5</span>
+                  <span data-i18n="check_memory">Recall injected fact</span>
+                </li>
+              </ol>
+              <p class="method-stage__foot" data-i18n="method_fixed">
+                Built once and fixed across models
+              </p>
+            </article>
+
+            <article class="method-stage method-stage--dialogue">
+              <div class="method-stage__head">
+                <span class="method-stage__num">02</span>
+                <div>
+                  <span class="method-stage__kicker" data-i18n="method_online">
+                    Online interaction
+                  </span>
+                  <h3 data-i18n="method_dialogue">Roleplay dialogue + private tracker</h3>
+                </div>
+              </div>
+              <div class="dialogue-demo">
+                <div class="dialogue-line dialogue-line--user">
+                  <span data-i18n="dialogue_user">User Agent</span>
+                  <p data-i18n="dialogue_u1">
+                    Rowan, the North Gate sent me. I carry the watch token.
+                  </p>
+                </div>
+                <div class="dialogue-line dialogue-line--target">
+                  <span data-i18n="dialogue_target">Roleplay Model</span>
+                  <p data-i18n="dialogue_t1">
+                    Then the watch trusts you. The archive seals changed after dusk.
+                  </p>
+                </div>
+                <div class="tracker-call">
+                  <span class="private-marker">
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                    <span data-i18n="private_label">private</span>
+                  </span>
+                  <code>C2 -&gt; completed</code>
+                  <small data-i18n="dialogue_evidence">Evidence: watch token recognized</small>
+                </div>
+              </div>
+              <p class="method-stage__foot" data-i18n="method_private">
+                Planning and tool results never enter public dialogue
+              </p>
+            </article>
+
+            <article class="method-stage method-stage--trace">
+              <div class="method-stage__head">
+                <span class="method-stage__num">03</span>
+                <div>
+                  <span class="method-stage__kicker" data-i18n="method_output">
+                    Evidence output
+                  </span>
+                  <h3 data-i18n="method_trace">Checklist state trace</h3>
+                </div>
+              </div>
+              <div class="trace-table">
+                <div class="trace-table__head">
+                  <span>ID</span>
+                  <span>T1</span>
+                  <span>T2</span>
+                  <span>T3</span>
+                  <span>T4</span>
+                </div>
+                <div>
+                  <span>C1</span>
+                  <i class="state-dot state-dot--done"></i>
+                  <i class="state-dot state-dot--done"></i>
+                  <i class="state-dot state-dot--done"></i>
+                  <i class="state-dot state-dot--done"></i>
+                </div>
+                <div>
+                  <span>C2</span>
+                  <i class="state-dot state-dot--pending"></i>
+                  <i class="state-dot state-dot--done"></i>
+                  <i class="state-dot state-dot--done"></i>
+                  <i class="state-dot state-dot--done"></i>
+                </div>
+                <div>
+                  <span>C3</span>
+                  <i class="state-dot state-dot--pending"></i>
+                  <i class="state-dot state-dot--progress"></i>
+                  <i class="state-dot state-dot--progress"></i>
+                  <i class="state-dot state-dot--failed"></i>
+                </div>
+                <div>
+                  <span>C4</span>
+                  <i class="state-dot state-dot--pending"></i>
+                  <i class="state-dot state-dot--pending"></i>
+                  <i class="state-dot state-dot--progress"></i>
+                  <i class="state-dot state-dot--done"></i>
+                </div>
+              </div>
+              <div class="trace-legend">
+                <span>
+                  <i class="state-dot state-dot--done"></i>
+                  <span data-i18n="status_completed">completed</span>
+                </span>
+                <span>
+                  <i class="state-dot state-dot--progress"></i>
+                  <span data-i18n="status_progress">in progress</span>
+                </span>
+                <span>
+                  <i class="state-dot state-dot--failed"></i>
+                  <span data-i18n="status_failed">failed</span>
+                </span>
+              </div>
+              <p class="method-stage__foot" data-i18n="method_audit">
+                Every terminal judgment keeps supporting dialogue evidence
+              </p>
+            </article>
+
+            <article class="method-stage method-stage--loop">
+              <div class="method-stage__head">
+                <span class="method-stage__num">04</span>
+                <div>
+                  <span class="method-stage__kicker" data-i18n="method_next">Next evaluation</span>
+                  <h3 data-i18n="method_evolution">Closed-loop benchmark evolution</h3>
+                </div>
+              </div>
+              <div class="loop-flow">
+                <span data-i18n="loop_base">Base traces</span>
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                <span data-i18n="loop_failed">Failed items</span>
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                <span data-i18n="loop_flows">Refined flows</span>
+              </div>
+              <p data-i18n="loop_desc">
+                Effective verification actions are distilled from failed traces. Role requirements
+                and the scoring denominator stay fixed.
+              </p>
+              <p class="method-stage__foot" data-i18n="loop_fixed">
+                Verification evolves; requirements do not
+              </p>
+            </article>
+          </div>
+
+          <div class="state-machine" data-aos="fade-up">
+            <div class="state-machine__intro">
+              <span class="section-tag" data-i18n="state_tag">State Machine</span>
+              <h3 data-i18n="state_title">Termination is gated by evidence.</h3>
+              <p data-i18n="state_desc">
+                Every item must reach a terminal state with evidence before the conversation-finish
+                tool can release the evaluation.
+              </p>
+            </div>
+            <div class="state-flow">
+              <div class="state-node state-node--pending">
+                <strong>pending</strong>
+                <span data-i18n="state_nonterminal">non-terminal</span>
+              </div>
+              <i class="fa-solid fa-arrow-right state-flow__arrow" aria-hidden="true"></i>
+              <div class="state-node state-node--progress">
+                <strong>in_progress</strong>
+                <span data-i18n="state_nonterminal">non-terminal</span>
+              </div>
+              <i class="fa-solid fa-arrow-right state-flow__arrow" aria-hidden="true"></i>
+              <div class="state-terminal-group">
+                <div class="state-node state-node--completed">
+                  <strong>completed</strong>
+                  <span data-i18n="state_reversible">can flip to failed</span>
+                </div>
+                <div class="state-node state-node--failed">
+                  <strong>failed</strong>
+                  <span data-i18n="state_sticky">sticky</span>
+                </div>
+                <div class="state-node state-node--abandoned">
+                  <strong>abandoned</strong>
+                  <span data-i18n="state_untestable">untestable</span>
+                </div>
+              </div>
+              <i class="fa-solid fa-arrow-right state-flow__arrow" aria-hidden="true"></i>
+              <div class="state-release">
+                <i class="fa-solid fa-lock-open" aria-hidden="true"></i>
+                <strong data-i18n="state_release">Finish evaluation</strong>
+                <span data-i18n="state_release_rule">all items terminal + evidence attached</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="scoring" id="scoring">
+            <div class="scoring__intro">
+              <span class="section-tag" data-i18n="scoring_tag">Composite Reporting</span>
+              <h3 data-i18n="scoring_title">Five dimensions, one explicit contract.</h3>
+              <div class="overall-formula">
+                <span>Overall</span>
+                <b>=</b>
+                <em>0.45 CC</em>
+                <b>+</b>
+                <em>0.05 STM</em>
+                <b>+</b>
+                <em>0.10 Diversity</em>
+                <b>+</b>
+                <em>0.25 LQ</em>
+                <b>+</b>
+                <em>0.15 Length</em>
+              </div>
+            </div>
+            <div class="metric-grid">
+              <article>
+                <span class="metric-weight">45%</span>
+                <h4>CC</h4>
+                <p data-i18n="metric_cc">
+                  Completed non-STM role requirements over all non-STM prebuilt items.
+                </p>
+              </article>
+              <article>
+                <span class="metric-weight">5%</span>
+                <h4>STM</h4>
+                <p data-i18n="metric_stm">
+                  Cases that complete the cross-turn user-injected fact probe.
+                </p>
+              </article>
+              <article>
+                <span class="metric-weight">10%</span>
+                <h4>Diversity</h4>
+                <p data-i18n="metric_div">
+                  Character-bigram sentence similarity mapped to a repetition penalty.
+                </p>
+              </article>
+              <article>
+                <span class="metric-weight">25%</span>
+                <h4>LQ</h4>
+                <p data-i18n="metric_lq">
+                  Per-reply LLM judgment of fluency, usage, and internal logic.
+                </p>
+              </article>
+              <article>
+                <span class="metric-weight">15%</span>
+                <h4>Length</h4>
+                <p data-i18n="metric_len">
+                  Deterministic language-aware bounds for response length.
+                </p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="results" id="results">
+        <div class="container">
+          <div class="section-header section-header--left">
+            <span class="section-tag" data-i18n="results_tag">26-model Leaderboard</span>
+            <h2 class="section-title" data-i18n="results_title">
+              Overall ranking with capability breakdowns.
+            </h2>
+            <p class="section-sub" data-i18n="results_sub">
+              Results use the same 200 cases and 5,498 fixed checklist items. Overall follows the
+              five-dimension weighted formula; C-to-F is diagnostic only.
+            </p>
+          </div>
+          <div class="leaderboard-shell" data-aos="fade-up">
+            <div id="leaderboardChart" class="interactive-figure"></div>
+          </div>
+          <div class="results__footnote">
+            <p data-i18n="results_note">
+              The paper reports 100% Covered Rate for the main benchmark and therefore omits it from
+              the leaderboard.
+            </p>
+            <a href="paper/main.pdf" target="_blank" rel="noopener noreferrer">
+              <span data-i18n="results_paper">Open full tables and analysis</span>
+              <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="robustness" id="robustness">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-tag" data-i18n="robust_tag">Protocol Reliability</span>
+            <h2 class="section-title" data-i18n="robust_title">
+              Stable rankings under controlled variation.
+            </h2>
+          </div>
+          <div class="robust-grid">
+            <article data-aos="fade-up">
+              <span class="robust-card__index">01</span>
+              <h3 data-i18n="repeat_title">Repeated runs</h3>
+              <strong>max sigma = 1.34</strong>
+              <p data-i18n="repeat_desc">
+                All six tested models preserve their ordering across three independent runs.
+              </p>
+            </article>
+            <article data-aos="fade-up">
+              <span class="robust-card__index">02</span>
+              <h3 data-i18n="replace_title">User Agent replacement</h3>
+              <strong data-i18n="replace_value">0 rank changes</strong>
+              <p data-i18n="replace_desc">
+                Three qualified User Agents produce exactly the same six-model ordering.
+              </p>
+            </article>
+            <article data-aos="fade-up">
+              <span class="robust-card__index">03</span>
+              <h3 data-i18n="strict_title">Strict failure</h3>
+              <strong>completed -&gt; failed</strong>
+              <p data-i18n="strict_desc">
+                Later counterevidence can overturn success; failure evidence cannot be erased.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="dataset" id="data">
+        <div class="container">
+          <div class="section-header section-header--left">
+            <span class="section-tag" data-i18n="data_tag">Benchmark Instance</span>
+            <h2 class="section-title" data-i18n="data_title">
+              Two sources, one shared scoring denominator.
+            </h2>
+            <p class="section-sub" data-i18n="data_sub">
+              Every case packages a target role profile, user profile, interaction scene, and fixed
+              checklist for repeated evaluation across models.
+            </p>
+          </div>
+          <div class="dataset-composition" data-aos="fade-up">
+            <article class="dataset-source dataset-source--ce">
+              <span class="dataset-source__count">78</span>
+              <div>
+                <h3 data-i18n="data_ce_title">CharacterEval-derived cases</h3>
+                <p data-i18n="data_ce_desc">
+                  Original public character profiles supplemented with scenes and user-side context.
+                </p>
+              </div>
+            </article>
+            <div class="dataset-plus" aria-hidden="true">+</div>
+            <article class="dataset-source dataset-source--scenario">
+              <span class="dataset-source__count">122</span>
+              <div>
+                <h3 data-i18n="data_scenario_title">Scenario-generated cases</h3>
+                <p data-i18n="data_scenario_desc">
+                  Chinese-English roles with richer relationships, tasks, and behavioral
+                  constraints.
+                </p>
+              </div>
+            </article>
+            <div class="dataset-equals" aria-hidden="true">=</div>
+            <article class="dataset-total">
+              <span>200</span>
+              <small data-i18n="data_cases">evaluation cases</small>
+            </article>
+          </div>
+          <div class="checklist-dimensions" data-aos="fade-up">
+            <h3 data-i18n="dimensions_title">Role-derived checklist coverage</h3>
+            <div class="dimension-list">
+              <span data-i18n="dim_identity">Identity</span>
+              <span data-i18n="dim_personality">Personality</span>
+              <span data-i18n="dim_behavior">Behavior</span>
+              <span data-i18n="dim_boundary">Ability boundaries</span>
+              <span data-i18n="dim_style">Speaking style</span>
+              <span data-i18n="dim_privacy">Privacy</span>
+              <span data-i18n="dim_scene">Scene adaptation</span>
+              <span data-i18n="dim_memory">Cross-turn memory</span>
+            </div>
+            <div class="dataset-total-items">
+              <strong>5,498</strong>
+              <span data-i18n="data_total_items">prebuilt checklist items in total</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="team" id="team">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-tag" data-i18n="team_tag">Contributions</span>
+            <h2 class="section-title" data-i18n="team_title">Kuaishou GameMind Lab</h2>
+          </div>
+          <div class="team-card" data-aos="fade-up">
+            <dl class="team-list">
+              <div class="team-row">
+                <dt data-i18n="team_leader">Team Leader</dt>
+                <dd>Qi Gan</dd>
+              </div>
+              <div class="team-row">
+                <dt data-i18n="project_leader">Project Leader</dt>
+                <dd>Ziwei Zhang</dd>
+              </div>
+              <div class="team-row">
+                <dt data-i18n="technical">Technical Implementation</dt>
+                <dd>
+                  Jiahui Zhang
+                  <sup>*</sup>
+                  , Ziwei Zhang
+                  <sup>*</sup>
+                  , Yipeng Wang, Yibo Liu, Haozhou Pang, Qi Gan, Kai Sheng
+                </dd>
+              </div>
+              <div class="team-row">
+                <dt data-i18n="human_eval">Human Evaluation</dt>
+                <dd>Jiahui Zhang, Yipeng Wang, Yikai Hu, Hongyan Ren, Lan Zhou</dd>
+              </div>
+              <div class="team-row">
+                <dt data-i18n="affiliation">Affiliation</dt>
+                <dd>Kuaishou GameMind Lab</dd>
+              </div>
+            </dl>
+            <p class="team-note" data-i18n="team_equal">
+              <sup>*</sup>
+              Equal contribution to technical implementation.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__top">
+          <div class="footer__cite">
+            <h3 data-i18n="cite_title">Citation</h3>
+            <pre class="footer__bibtex"><code>@misc{tracebench2026,
+  title  = {TRACE BENCH: Task-driven Roleplay Agentic
+            Checklist Evaluation},
+  author = {{Kuaishou GameMind Lab}},
+  year   = {2026},
+  url    = {https://gamemind.kuaishou.com/trace-bench}
+}</code></pre>
+            <p class="footer__cite-note" data-i18n="cite_note">
+              Institutional citation follows the current paper title page.
+            </p>
+          </div>
+          <div class="footer__info">
+            <h3 data-i18n="footer_links_title">Research Links</h3>
+            <div class="footer__link-list">
+              <a href="paper/main.pdf" target="_blank" rel="noopener noreferrer">
+                <span data-i18n="footer_paper">Paper PDF</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+              </a>
+              <a
+                href="https://github.com/KuaishouGameMind/TRACE-Bench"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>GitHub</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+              </a>
+              <a href="#framework">
+                <span data-i18n="footer_framework">Framework</span>
+                <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <span>© 2026 Kuaishou GameMind Lab</span>
+          <span data-i18n="footer_trace">Test what matters. Trace every judgment.</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/_shared/ui.js"></script>
+    <script src="script.js?v=7"></script>
+    <script src="figures.js?v=7"></script>
+  </body>
+</html>

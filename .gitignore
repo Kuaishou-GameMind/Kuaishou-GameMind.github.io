@@ -1,12 +1,20 @@
-# 依赖与构建中间产物
-node_modules/
-.next/
-out/
+# 工程脚手架（后续随 cutscene_agent 迁移统一提交）
+/.github/
+/scripts/
+/docs/
+/AGENTS.md
+/.htmlvalidate.json
+/.prettierrc.json
+/.prettierignore
+/eslint.config.js
+/stylelint.config.js
+/package.json
+/package-lock.json
 
-# 本地缓存
+# cutscene_agent 迁移产物（未纳入本次提交）
+/projects/cutscene_agent/
+
+# 本地缓存与无关产物
 .DS_Store
+node_modules/
 .playwright-cli/
-
-# 编辑器
-.vscode/
-.idea/

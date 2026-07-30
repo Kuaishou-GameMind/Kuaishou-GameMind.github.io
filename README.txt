@@ -1,0 +1,1 @@
+GitHub Pages deployment folder for Kuaishou GameMind.
