@@ -297,6 +297,8 @@ let currentLang = document.documentElement.lang.toLowerCase().startsWith('zh') ?
 
 function getInitialLanguage() {
   try {
+    const global = localStorage.getItem('gamemind-lang');
+    if (global && I18N[global]) return global;
     const saved = localStorage.getItem('cs-agent-lang');
     if (saved && I18N[saved]) {
       return saved;
@@ -332,7 +334,7 @@ function setLanguage(lang) {
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
 
   // Store preference
-  try { localStorage.setItem('cs-agent-lang', lang); } catch(e) {}
+  try { localStorage.setItem('gamemind-lang', lang); localStorage.setItem('cs-agent-lang', lang); } catch(e) {}
 
   // Re-render interactive figures with new language
   if (typeof refreshFigures === 'function') refreshFigures();

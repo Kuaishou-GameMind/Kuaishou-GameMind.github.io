@@ -1,5 +1,3 @@
-import Script from 'next/script'
-
 interface SiteScript {
   src: string
   strategy?: 'beforeInteractive' | 'afterInteractive' | 'lazyOnload'
@@ -22,8 +20,14 @@ export default function SitePage({ bodyHtml, stylesheets, scripts }: SitePagePro
         <link key={href} rel="stylesheet" href={href} />
       ))}
       <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
-      {scripts.map(({ src, strategy = 'afterInteractive' }) => (
-        <Script key={src} src={src} strategy={strategy} />
+      <script
+        dangerouslySetInnerHTML={{
+          __html:
+            'document.documentElement.lang=(localStorage.getItem("gamemind-lang")==="zh")?"zh-CN":"en";',
+        }}
+      />
+      {scripts.map(({ src }) => (
+        <script key={src} src={src} defer />
       ))}
     </>
   )
