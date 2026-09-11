@@ -12,16 +12,22 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('dark')
+  // 与根 layout 的 inline script 对齐：hydration 前已设置 data-theme，此处同步读取避免二次渲染闪烁
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof document !== 'undefined') {
+      return (document.documentElement.getAttribute('data-theme') as Theme) ?? 'light'
+    }
+    return 'light'
+  })
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
     const saved = localStorage.getItem('theme') as Theme
-    if (saved) {
+    if (saved === 'light' || saved === 'dark') {
       setTheme(saved)
     } else {
-      setTheme('dark')
+      setTheme('light')
     }
   }, [])
 

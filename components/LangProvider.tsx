@@ -11,15 +11,15 @@ interface LangContextType {
 }
 
 const LangContext = createContext<LangContextType>({
-  lang: 'zh',
+  lang: 'en',
   toggleLang: () => {},
-  t: (zh) => zh,
+  t: (_, en) => en,
 })
 
 const STORAGE_KEY = 'gamemind-lang'
 
 export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>('zh')
+  const [lang, setLang] = useState<Lang>('en')
 
   useEffect(() => {
     try {
@@ -27,7 +27,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
       if (saved === 'zh' || saved === 'en') {
         setLang(saved)
       } else {
-        localStorage.setItem(STORAGE_KEY, 'zh')
+        localStorage.setItem(STORAGE_KEY, 'en')
       }
     } catch (e) {}
   }, [])

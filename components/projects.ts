@@ -32,6 +32,9 @@ export interface Project {
   previewFit?: 'contain' | 'cover'
   /** 项目 logo 绝对路径，缺省则用 icon 降级渲染 */
   logo?: string
+  /** 首页 timeline 卡片专用缩略图（80px 方块，160px WebP），缺省回退到 preview/logo */
+  previewThumb?: string
+  logoThumb?: string
 }
 
 export const projects: Project[] = [
@@ -60,6 +63,7 @@ export const projects: Project[] = [
     date: '2026-04-29',
     stat: { value: 'MCP', labelZh: '一句话生成 3D 游戏的可消费剧情', labelEn: 'Generate consumable 3D game cinematics from a single prompt' },
     preview: '/project-preview.png',
+    previewThumb: '/project-preview-thumb.webp',
   },
   {
     id: 'trace-bench',
@@ -86,6 +90,8 @@ export const projects: Project[] = [
     date: '2026-06-17',
     preview: '/projects/trace_bench/images/framework.png',
     logo: '/projects/trace_bench/images/logo.png',
+    previewThumb: '/projects/trace_bench/images/framework-thumb.webp',
+    logoThumb: '/projects/trace_bench/images/logo-thumb.webp',
   },
   {
     id: 'arag-cli',
@@ -112,6 +118,8 @@ export const projects: Project[] = [
     date: '2026-07-02',
     preview: '/projects/arag_cli/images/framework.png',
     logo: '/projects/arag_cli/images/logo.png',
+    previewThumb: '/projects/arag_cli/images/framework-thumb.webp',
+    logoThumb: '/projects/arag_cli/images/logo-thumb.webp',
   },
   {
     id: 'kuairp',

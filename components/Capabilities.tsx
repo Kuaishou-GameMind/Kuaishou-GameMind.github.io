@@ -90,16 +90,32 @@ function CompactCard({ project, isDark, lang, t }: {
           className={`shrink-0 w-20 h-20 rounded-xl overflow-hidden border ${border} flex items-center justify-center`}
           style={{ background: isDark ? '#000' : '#f4f4f4' }}
         >
-          {project.logo ? (
+          {project.logoThumb ? (
+            <img
+              src={project.logoThumb}
+              alt={project.nameEn}
+              loading="lazy"
+              className="w-full h-full object-contain p-2"
+            />
+          ) : project.previewThumb ? (
+            <img
+              src={project.previewThumb}
+              alt={project.nameEn}
+              loading="lazy"
+              className="w-full h-full object-contain p-2"
+            />
+          ) : project.logo ? (
             <img
               src={project.logo}
               alt={project.nameEn}
+              loading="lazy"
               className="w-full h-full object-contain p-2"
             />
           ) : project.preview ? (
             <img
               src={project.preview}
               alt={project.nameEn}
+              loading="lazy"
               className="w-full h-full object-contain p-2"
             />
           ) : (

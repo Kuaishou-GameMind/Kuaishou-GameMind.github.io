@@ -13,6 +13,19 @@
 
 - Kuairp 页面所有「阅读报告」入口统一跳转至 [arXiv PDF](https://arxiv.org/pdf/2609.11127)。
 
+## [1.8.0] — 2026-07-30
+
+### 加载性能优化（首屏体积与可见性全面改善）
+
+- **P0 图片优化**：首页 timeline 卡片引用的 5 张图（project-preview 3.4M + trace_bench/arag_cli 的 framework+logo 各两张）原本以原尺寸在 80px 方块渲染，现生成 160px WebP 缩略图（`*-thumb.webp`），首屏图片体积从 ~5MB 降至 ~20KB（250 倍）。新增 `scripts/optimize-images.mjs` 一次性优化脚本（依赖临时安装的 sharp）。
+  - `components/projects.ts`：`Project` 接口新增 `previewThumb`/`logoThumb` 字段，`Capabilities` 卡片优先使用缩略图，缺省回退原 `preview`/`logo`。
+  - cutscene 站点 `teaser.png`（3.4M）→ `teaser.webp`（283K），`BODY_HTML` 引用更新。
+  - 同步将 cutscene 站点其余大图（camera_templates/architecture/eval_radar/eval_framework）转为 WebP 备用。
+- **P1 字体加载**：`globals.css` 的 Google Fonts `@import`（阻塞渲染）移除，改在根 `app/layout.tsx` 用 `preconnect` + `preload` + `stylesheet` 注入，消除渲染阻塞与额外网络往返。
+- **P2 首屏可见性**：去掉 `app/(main)/page.tsx` 的 `if (!mounted) return null` 守卫，SSR 直接输出首屏 HTML（之前静态导出首屏为空，依赖 JS 才可见）。根 layout 注入 blocking inline script，hydration 前据 localStorage 设置 `data-theme`（未保存偏好时默认浅色），消除主题闪烁；语言偏好缺失时默认英文；`ThemeProvider` 初始 theme 同步读取 DOM 属性对齐。`<main>` 背景色改用 CSS 变量 `var(--bg-primary)` 由 `data-theme` 驱动。
+- **P3 懒加载**：`Team`/`Vision` 组件改用 `next/dynamic` 懒加载，拆为独立 chunk，首页 First Load JS 从 142KB 降至 139KB。
+- **默认语言**：首页默认使用英文，浏览器标签标题更新为 `Kuaishou GameMind Lab`。
+
 ## [1.7.0] — 2026-07-30
 
 ### 首页开源项目改为时间线展示

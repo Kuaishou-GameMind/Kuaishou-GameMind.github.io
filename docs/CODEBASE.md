@@ -47,6 +47,8 @@ team-page/
 ├── next.config.js                output:'export' + trailingSlash
 ├── tailwind.config.js            Tailwind 配置（品牌色 + CSS 变量映射）
 ├── package.json                  依赖与脚本
+├── scripts/
+│   └── optimize-images.mjs       图片优化脚本（生成首页缩略图 + 大图转 WebP，依赖临时 sharp）
 ├── docs/                         文档（CODEBASE.md + CHANGELOG.md）
 └── AGENTS.md                     项目级规则
 ```
@@ -71,9 +73,13 @@ team-page/
   status: 'live',           // 'live' | 'coming-soon' | 'concept'
   preview: '/projects/xxx/images/framework.png',  // 可选：大卡预览图，缺省走 logo+渐变降级版式
   logo: '/projects/xxx/images/logo.png',          // 可选：项目 logo，缺省用 icon 降级渲染
+  previewThumb: '/projects/xxx/images/framework-thumb.webp',  // 首页 80px 卡片专用缩略图（160px WebP）
+  logoThumb: '/projects/xxx/images/logo-thumb.webp',          // 首页卡片专用 logo 缩略图
   // ...其余字段
 }
 ```
+
+> 首页 timeline 卡片优先使用 `logoThumb`/`previewThumb`（160px WebP，~3-6KB），缺省回退 `logo`/`preview`。新增项目后运行 `node scripts/optimize-images.mjs` 生成缩略图（脚本依赖临时安装的 sharp）。
 
 辅助函数：`liveProjects`（筛选已上线项目）、`timelineProjects`（已上线项目按日期降序，时间线数据源）、`getProject(slug)`（按 slug 查找）。
 
@@ -137,6 +143,7 @@ team-page/
 npm run dev      # 本地开发（localhost:3004）
 npm run build    # 静态导出到 out/
 npm run preview  # 本地预览 out/（npx serve out）
+node scripts/optimize-images.mjs  # 图片优化（生成首页缩略图 + 大图转 WebP）
 ```
 
 **部署流程**（全自动）：push 到 `main` 分支 → GitHub Actions 自动执行 `npm ci` + `npm run build` → 上传 `out/` 为 Pages artifact → 部署到 GitHub Pages。
@@ -144,6 +151,13 @@ npm run preview  # 本地预览 out/（npx serve out）
 > 一次性配置：GitHub **Settings → Pages → Source** 设为 `GitHub Actions`。配置后每次 push `main` 自动触发部署。
 
 `.github/workflows/deploy.yml` 工作流：`build` job 产出 `out/` → `upload-pages-artifact` → `deploy` job 通过 `deploy-pages` 发布。`.nojekyll` 由 `upload-pages-artifact` 自动注入。
+
+## 加载性能优化（1.8.0）
+
+- **图片**：首页 timeline 卡片用 160px WebP 缩略图（`previewThumb`/`logoThumb`），站点页大图转 WebP。`output:'export'` 无法用 next/image 自动优化，改由 `scripts/optimize-images.mjs` 手动生成。
+- **字体**：Google Fonts 在根 `app/layout.tsx` 用 `preconnect`+`preload`+`stylesheet` 加载（非 CSS `@import` 阻塞）。
+- **首屏可见性**：根 layout 注入 blocking inline script，hydration 前据 localStorage 设 `data-theme`（未保存偏好时默认浅色），消除主题闪烁；首页 SSR 直接输出英文内容（语言偏好缺失时默认英文）；`<main>` 背景由 `var(--bg-primary)` 驱动。
+- **懒加载**：`Team`/`Vision` 用 `next/dynamic` 拆为独立 chunk，减小首屏 JS。
 
 ## 变更记录
 

@@ -1,32 +1,24 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
+import { useRef } from 'react'
+import dynamic from 'next/dynamic'
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
-import Team from '@/components/Team'
 import Capabilities from '@/components/Capabilities'
-import Vision from '@/components/Vision'
-import { useTheme } from '@/components/ThemeProvider'
+
+// below-the-fold 组件懒加载，减小首屏 JS
+const Team = dynamic(() => import('@/components/Team'))
+const Vision = dynamic(() => import('@/components/Vision'))
 
 export default function Home() {
   const capabilitiesRef = useRef<HTMLDivElement>(null)
-  const [mounted, setMounted] = useState(false)
-  const { theme } = useTheme()
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   const scrollToCapabilities = () => {
     capabilitiesRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  if (!mounted) return null
-
-  const bgColor = theme === 'dark' ? '#080808' : '#fafafa'
-
   return (
-    <main className="min-h-screen" style={{ backgroundColor: bgColor }}>
+    <main className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <Navbar />
       <div id="home">
         <Hero onExplore={scrollToCapabilities} />
