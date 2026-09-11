@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import { Video, Sparkles, Brain } from 'lucide-react'
+import { Video, Sparkles, Brain, Drama } from 'lucide-react'
 
 export type ProjectStatus = 'live' | 'coming-soon' | 'concept'
 
@@ -112,6 +112,29 @@ export const projects: Project[] = [
     date: '2026-07-02',
     preview: '/projects/arag_cli/images/framework.png',
     logo: '/projects/arag_cli/images/logo.png',
+  },
+  {
+    id: 'kuairp',
+    slug: 'kuairp',
+    nameZh: 'Kuairp',
+    nameEn: 'Kuairp',
+    shortDescZh: '角色扮演模型技术报告',
+    shortDescEn: 'Role-play model technical report',
+    titleZh: 'Kuairp 系列角色扮演模型',
+    titleEn: 'Kuairp Role-Play Models',
+    subtitle: 'ROLEPLAY',
+    subtitleDescZh: '具备通用工具调用能力的领域角色扮演模型。',
+    subtitleDescEn: 'A domain role-play model with general tool-calling ability.',
+    descZh:
+      'Kuairp 系列角色扮演模型在小体积中内建角色扮演能力与领域世界观知识，同时兼顾通用工具调用能力，以支持游戏内多样化的玩法。报告系统性地给出了人设模板设计、基于商业模型蒸馏与用户行为模拟的 SFT 数据管线、以复合奖励消除六类退化现象的强化学习策略，以及以 CDD（Cumulative-Divergence Decay）为核心的两阶段 OPD 在线蒸馏方法。',
+    descEn:
+      'The Kuairp series of role-play models embeds role-play ability and domain world knowledge in a small footprint while preserving general tool-calling, to support diverse in-game play. The report details a standardized role template, an SFT data pipeline based on commercial-model distillation and user-behavior simulation, a reinforcement-learning strategy with a composite reward that removes six classes of degradation, and a two-stage OPD on-policy distillation method centered on CDD (Cumulative-Divergence Decay).',
+    tagsZh: ['SFT', 'RL', 'OPD', 'CDD'],
+    tagsEn: ['SFT', 'RL', 'OPD', 'CDD'],
+    icon: Drama,
+    link: '/projects/kuairp/',
+    status: 'live',
+    date: '2026-08-15',
   },
 ]
 

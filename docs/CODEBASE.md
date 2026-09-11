@@ -26,7 +26,8 @@ team-page/
 │   └── projects/                 项目站点路由（真实页面，统一在 projects/ 下）
 │       ├── cutscene_agent/page.tsx
 │       ├── trace_bench/page.tsx
-│       └── arag_cli/page.tsx
+│       ├── arag_cli/page.tsx
+│       └── kuairp/page.tsx
 ├── components/                   React 组件
 │   ├── Navbar/Hero/Team/Capabilities/Vision.tsx  首页五大区块
 │   ├── ThemeProvider/LangProvider.tsx            深浅色 + 中英文 Context
@@ -41,7 +42,8 @@ team-page/
 │   └── projects/                 项目站点资源（统一在 projects/ 下）
 │       ├── cutscene_agent/       assets + style.css + script.js + figures.js + video-modal.js
 │       ├── trace_bench/          images + leaderboard + paper + style.css + script.js + figures.js
-│       └── arag_cli/             images + style.css + script.js
+│       ├── arag_cli/             images + style.css + script.js
+│       └── kuairp/               style.css + script.js（技术报告介绍页）
 ├── next.config.js                output:'export' + trailingSlash
 ├── tailwind.config.js            Tailwind 配置（品牌色 + CSS 变量映射）
 ├── package.json                  依赖与脚本
@@ -101,13 +103,14 @@ team-page/
 
 ### 项目站点（`app/projects/` 下，统一路径）
 
-三个站点是**手写原生 HTML/CSS/JS**，通过 `SitePage` 组件注入。**不改站点内部 JS 逻辑**。
+四个站点是**手写原生 HTML/CSS/JS**，通过 `SitePage` 组件注入。**不改站点内部 JS 逻辑**。
 
 | 站点 | 路由 | 共享依赖 | 主题 |
 |---|---|---|---|
 | Cutscene Agent | `/projects/cutscene_agent/` | 无（自包含） | 深色电影 + 橙色 |
 | TRACE BENCH | `/projects/trace_bench/` | `/_shared/base.css` + `/_shared/ui.js` | 暖色编辑 + 砖红 |
 | ARAG CLI | `/projects/arag_cli/` | `/_shared/base.css` + `/_shared/ui.js` | 操作台 + 暖灰白 |
+| Kuairp 技术报告 | `/projects/kuairp/` | `/_shared/ui.js`（CSS 自包含） | 橙色 + 深浅双主题 |
 
 - **`_shared/ui.js`**：共享 UI 引擎，暴露 `window.initSite(config)`，提供 i18n、navbar 滚动、`data-aos` 动画、`data-count` 计数器、平滑锚点。
 - **`_shared/base.css`**：共享结构样式骨架，各站点 `style.css` 覆盖 `:root` 变量换肤。

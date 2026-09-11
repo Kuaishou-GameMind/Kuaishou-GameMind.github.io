@@ -127,7 +127,7 @@ function CompactCard({ project, isDark, lang, t }: {
             {lang === 'zh' ? project.subtitleDescZh : project.subtitleDescEn}
           </p>
           <div className="flex items-center gap-1.5 flex-wrap">
-            {tags.slice(0, 3).map(tag => (
+            {tags.slice(0, 5).map(tag => (
               <span
                 key={tag}
                 className={`px-2 py-0.5 text-[10px] rounded-full font-medium ${isDark ? 'bg-white/[0.06] text-white/45' : 'bg-gray-100 text-gray-500'}`}
